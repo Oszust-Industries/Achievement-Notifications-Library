@@ -1,7 +1,7 @@
 ## Achievement Notifications Library v1.4.0 - Oszust Industries
-dateInformation = "Created on: 5-15-21 - Last update: 8-26-21"
-libraryVersion = "v1.4.0"
-newestAchievementVersion = libraryVersion
+dateInformation = "Created on: 5-15-21 - Last update: 8-29-21"
+libraryVersion = "v1.4.0 BETA (Build: 21.8.29.1)"
+newestAchievementVersion = "v1.4.0"
 import pickle
 import re
 import time
@@ -9,13 +9,11 @@ from datetime import datetime, date, timedelta
 
 def libraryConfig():
 ## System Configures
-    global bootLanguage, deactivateFileOpening, enableAccountSystem, enableAchievementThreading, exitSystem, overrideResetAchivements, resetSettings, supportedLanguages, systemName
+    global deactivateFileOpening, enableAccountSystem, enableAchievementThreading, exitSystem, overrideResetAchivements, resetSettings, systemName
     systemName = "Achievement Notifications Library"
-    supportedLanguages = ["english"]
     exitSystem = False
 ## Change Configures
     resetSettings = False
-    bootLanguage = "english"
     ## V|WARNING|: No Playtime/Achievements Saved
     overrideResetAchivements = False
     enableAchievementThreading = True
@@ -47,7 +45,6 @@ def accountLogin(accountAction):
         expiredCodes = []
         emailconfirmed = 1
         passwordAttemptsLeft = 5
-        accountLanguage = bootLanguage
         currentAccountUsername = ""
         accountLogin("createUserPath")
 ## Windows Detector
@@ -119,16 +116,16 @@ def accountLogin(accountAction):
     elif accountAction == "logout":
         if exitSystem == False:
             exitSystem = True
-            print(interfaceTranslation("string_save_logout"))
+            print("\n\n\nDo not close application.\nSaving and logging out...\n")
         if currentAccountUsername != "":
             Achievements("saving")
             if len(waitingAchievementsList) <= 0: librarySetup()
             else:
                 time.sleep(0.3)
                 accountLogin("logout")
-## Account Logout
+## Account Quit
     elif accountAction == "quit":
-        print(interfaceTranslation("string_save_exit"))
+        print("\n\n\nDo not close application.\nSaving and exiting...\n")
         exitSystem = True
         if currentAccountUsername != "": Achievements("saving")
 ## Email
@@ -178,20 +175,12 @@ def accountLogin(accountAction):
                 accountLogin("createAccount_1")
         elif createAccountStep == 2:
             accountPassword = ""
-            accountLanguage = input(str("\n\n\n\nThis is the language that all text will be shown in.\n\nWhat language would you like to use? " + str(supportedLanguages) + " "))
-            if accountLanguage.lower() == "en": accountLanguage = "english"
-            if accountLanguage.lower() in ["cancel", "quit", "exit"]: librarySetup()
-            elif accountLanguage.lower() in ["back", "return"]:
-                currentAccountUsername = ""
-                accountLogin("createAccount_1")
-            elif accountLanguage.lower() not in supportedLanguages:
-                print("\nThis is not a supported language. We support: " + str(supportedLanguages))
-                accountLogin("createAccount_2")
-            else: accountLogin("createAccount_3")
+            accountLanguage = "english"
+            accountLogin("createAccount_3")
         elif createAccountStep == 3:
             accountEmail = input(str("\n\n\n\nAn email is required strictly for when you forget your password or a verification code needs to be sent.\n\nWhat email would you like to use for your account? "))
             if accountEmail.lower() in ["cancel", "quit", "exit"]: librarySetup()
-            elif accountEmail.lower() in ["back", "return"]: accountLogin("createAccount_2")
+            elif accountEmail.lower() in ["back", "return"]: accountLogin("createAccount_1")
             elif "@" in accountEmail and "." in accountEmail: accountLogin("createAccount_4")
             else:
                 print("\nThis email is not a valid email.")
@@ -546,26 +535,6 @@ def accountLogin(accountAction):
             pickle.dump(accountOwnedDLC, open(currentAccountPath + "\\accountOwnedDLC.p", "wb"))
         else: accountActiveOwnedDLC = freeGameDLC
 
-def interfaceTranslation(currentString):
-    if currentString == "string_debug_command_fail":
-        if accountLanguage.lower() == "english": return "Debug command not accepted."
-    elif currentString == "string_save_exit":
-        if accountLanguage.lower() == "english": return "\n\n\nDo not close application.\nSaving and exiting...\n"
-    elif currentString == "string_save_logout":
-        if accountLanguage.lower() == "english": return "\n\n\nDo not close application.\nSaving and logging out...\n"
-    elif currentString == "string_reset_achievements_message":
-        if accountLanguage.lower() == "english": return "Loading 1/2: (Resetting achievements - " + newestAchievementVersion + ")..."
-    elif currentString == "string_stats_command":
-        if accountLanguage.lower() == "english": return "Current achievements: " + str(gained_Achievements) + "\nCurrent achievement progress: " + str(achievementProgressTracker)
-    elif currentString == "string_stats_command_fail":
-        if accountLanguage.lower() == "english": return "Either achievements are disabled or file opening is disabled."
-    elif currentString == "string_Achievement_Welcome_title":
-        if accountLanguage.lower() == "english": return "Bronze - Welcome to the Game - 1"
-    elif currentString == "string_Achievement_Welcome_description":
-        if accountLanguage.lower() == "english": return "Start a new game. - 1"
-    elif currentString == "string_blank":
-        if accountLanguage.lower() == "english": return ""
-
 def clear():
 ## Clear Output
     print("\n" * 70)
@@ -590,7 +559,7 @@ def Achievements(achievementToGain):
     else: lastPlaytimeDatePlayed = "Currently In-game"
 ## Reset Achievements
     if achievementToGain == "reset":
-        print(interfaceTranslation("string_reset_achievements_message"))
+        print("Loading 1/2: (Resetting achievements - " + newestAchievementVersion + ")...")
         achievementProgressTracker = defaultAchievementProgressTracker
         if newestAchievementVersion not in ["v1.0.0", "v1.1.0", "v1.2.0"]: gained_Achievements = [newestAchievementVersion, lastPlaytimeDatePlayed, currentPlaytime, availableAchievements, 0, 0, 0, 0,]
         elif newestAchievementVersion not in ["v1.0.0"]: gained_Achievements = [availableAchievements, 0, 0, 0, 0,]
@@ -671,7 +640,7 @@ def Achievements(achievementToGain):
         return
     if deactivateFileOpening == False and achievementsActivated == True and achievementToGain not in ["reset", "setup", "ready"] and "Progress" not in achievementToGain and achievementToGain not in gained_Achievements:
         if achievementToGain == "Achievement_Welcome":
-            toaster.show_toast(interfaceTranslation("string_Achievement_Welcome_title"), str(interfaceTranslation("string_Achievement_Welcome_description") + "\n(" + currentAccountUsername + ")"), icon_path = bronzeIcon, duration=5, threaded=enableAchievementThreading)
+            toaster.show_toast("Start a new game. - 1", str("Bronze - Welcome to the Game - 1" + "\n(" + currentAccountUsername + ")"), icon_path = bronzeIcon, duration=5, threaded=enableAchievementThreading)
             if achievementVersion not in ["v1.0.0"]: medalEarned = "Bronze"
         elif achievementToGain == "Achievement_Welcome2":
             toaster.show_toast("Bronze - Welcome to the Game - 2", str("Start a new game. - 2" + "\n(" + currentAccountUsername + ")"), icon_path = bronzeIcon, duration=5, threaded=enableAchievementThreading)
@@ -746,14 +715,14 @@ def testAchievements():
         accountLogin("quit")
         return
     elif userAnswer.lower() == "stats":
-        if achievementsActivated == True and deactivateFileOpening == False: print(interfaceTranslation("string_stats_command"))
-        else: print(interfaceTranslation("string_stats_command_fail"))
+        if achievementsActivated == True and deactivateFileOpening == False: print("Current achievements: " + str(gained_Achievements) + "\nCurrent achievement progress: " + str(achievementProgressTracker))
+        else: print("Either achievements are disabled or file opening is disabled.")
     elif userAnswer.lower() == "rename": accountLogin("renameAccount")
     elif userAnswer.lower() == "logout":
         accountLogin("logout")
         return
     elif userAnswer.lower() in ["clear", "reset"]: Achievements("reset")
-    else: print(interfaceTranslation("string_debug_command_fail"))
+    else: print("Debug command not accepted.")
     print("(" + str(round((time.time() - start), 6)) + " seconds)")
     testAchievements()
 
