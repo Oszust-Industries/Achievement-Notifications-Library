@@ -1,6 +1,6 @@
 ## Achievement Notifications Library v1.4.0 - Oszust Industries
 dateInformation = "Created on: 5-15-21 - Last update: 8-29-21"
-libraryVersion = "v1.4.0 BETA (Build: 21.8.29.1)"
+libraryVersion = "v1.4.0-Beta(21.8.29.1)"
 newestAchievementVersion = "v1.4.0"
 import pickle
 import re
