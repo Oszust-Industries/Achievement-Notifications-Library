@@ -23,6 +23,7 @@ def libraryConfig():
 def librarySetup():
 ## Setup Software
     clear()
+    ##print("Oszust Industries Login System:\n\n")
     print("Achievement Notifications Library " + libraryVersion + " - Oszust Industries"
             "\n" + dateInformation + "\nLibrary Version: " + libraryVersion + "\n\n")
     libraryConfig()
@@ -521,7 +522,7 @@ def accountLogin(accountAction):
         if len(packedSettings) >= 1: achievementsActivated = packedSettings[0]
         else: achievementsActivated = True
         if len(packedSettings) >= 2: resetAchievements = packedSettings[1]
-        else: achievementsActivated = False
+        else: resetAchievements = False
         accountLogin("saveSettings")
         accountLogin("readOwnedDLC")
 ## Save Settings
