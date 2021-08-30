@@ -670,7 +670,7 @@ def Achievements(achievementToGain):
             if achievementVersion not in ["v1.0.0"]: medalEarned = "Silver"
         elif achievementToGain == "Achievement_DEBUG":
             toaster.show_toast("Trophy Level - Achievement Title", str("Achievement Description." + "\n(" + currentAccountUsername + ")"), icon_path = bronzeIcon, duration=5, threaded=enableAchievementThreading)
-            if achievementVersion not in ["v1.0.0"]: medalEarned = "Silver"
+            if achievementVersion not in ["v1.0.0"]: medalEarned = "Bronze"
         elif achievementToGain != "saving": print("GAME ERROR(No Achievement with that name found)")
         if achievementVersion not in ["v1.0.0"] and achievementToGain != "saving":
             if medalEarned == "Bronze": earnedBronze += 1
