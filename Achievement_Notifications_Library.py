@@ -1,5 +1,5 @@
 ## Achievement Notifications Library v1.4.0 - Oszust Industries
-dateInformation = "Created on: 5-15-21 - Last update: 8-29-21"
+dateInformation = "Created on: 5-15-21 - Last update: 8-30-21"
 libraryVersion = "v1.4.0"
 newestAchievementVersion = libraryVersion
 import pickle
@@ -44,7 +44,7 @@ def accountLogin(accountAction):
     if accountAction == "setup":
         lockDateTime = ""
         expiredCodes = []
-        emailconfirmed = 1
+        emailconfirmed = False
         passwordAttemptsLeft = 5
         currentAccountUsername = ""
         accountLogin("createUserPath")
@@ -158,6 +158,7 @@ def accountLogin(accountAction):
                 server.ehlo()
                 server.login(sender_email, oo7)
                 server.sendmail(sender_email, receiver_email, message)
+            print("\nBe sure to check your junk mail for the email.\n")
 ## Create Account
     elif "createAccount" in accountAction:
         createAccountStep = int(accountAction.replace("createAccount_", ""))
@@ -342,7 +343,7 @@ def accountLogin(accountAction):
             accountLogin("renameAccount")
 ## Change Password
     elif accountAction == "changeAccountPassword":
-        if emailconfirmed == 1:
+        if emailconfirmed == False:
             clear()
             print("Change Account Password:")
         if accountPassword == "none":
@@ -358,19 +359,21 @@ def accountLogin(accountAction):
                 print("Please type one of the following actions.\n\n\n")
                 accountLogin("changeAccountPassword")
         else:
-            if emailconfirmed == 1:
+            if emailconfirmed == False:
                 accountInput = input(str("\nType your email to confirm your identity: "))
                 if accountInput == accountEmail:
                     emailCode = randrange(100000, 999999)
                     accountLogin("emailAccount_resetPasswordCode")
                     accountInput = input(str("\nA code has been sent to your email to manage your password. Type the code here: "))
-                elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"]: librarySetup()
+                elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"]:
+                    librarySetup()
+                    return
                 else:
                     clear()
                     print("\n\nEmail doesn't match " + currentAccountUsername + "'s email.\n\n\n")
                     accountLogin("setup")
-            if emailconfirmed == 2 or (accountInput == str(emailCode) and datetime.now() < emailExpireTime):
-                emailconfirmed = 2
+            if emailconfirmed == True or (accountInput == str(emailCode) and datetime.now() < emailExpireTime):
+                emailconfirmed = True
                 print("\n\n1.Change password\n2.Remove password")
                 accountInput = input(str("\nType the number of the action for " + currentAccountUsername + "'s password: "))
                 if accountInput == "1":
@@ -396,6 +399,7 @@ def accountLogin(accountAction):
                     clear()
                     print("Please type one of the following actions.\n\n\n")
                     accountLogin("changeAccountPassword")
+            elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"]: librarySetup()
             elif (accountInput == str(emailCode) and datetime.now() >= emailExpireTime) or int(accountInput) in expiredCodes:
                 print("\n\nThis code has expired. A new code has been sent to your email.")
                 expiredCodes = expiredCodes.append(account2Way)
@@ -472,7 +476,9 @@ def accountLogin(accountAction):
             return
         elif accountPassword != "none":
             accountInput = input(str("\n\n\nType 'forgot password' if you have forgotten your password.\n\nThis account has a password. What is your account password? "))
-            if accountInput.lower() == "forgot password": accountLogin("changeAccountPassword")
+            if accountInput.lower() == "forgot password":
+                accountLogin("changeAccountPassword")
+                return
             elif accountInput == accountPassword: clear()
             elif accountInput.lower() in ["back", "quit", "return", "logout"]:
                 librarySetup()
