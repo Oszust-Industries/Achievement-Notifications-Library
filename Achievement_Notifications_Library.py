@@ -1,6 +1,6 @@
 ## Achievement Notifications Library v1.4.0 - Oszust Industries
-dateInformation = "Created on: 5-15-21 - Last update: 8-30-21"
-libraryVersion = "v1.4.0"
+dateInformation = "Created on: 5-15-21 - Last update: 9-01-21"
+libraryVersion = "v1.4.1"
 newestAchievementVersion = libraryVersion
 import pickle
 import re
@@ -82,7 +82,7 @@ def accountLogin(accountAction):
         if len(tempAvailableAccounts) > 0: print(str(len(tempAvailableAccounts) + 3) + ". Remove account")
         if len(tempAvailableAccounts) > 0: print(str(len(tempAvailableAccounts) + 4) + ". Quit")
         else: print(str(len(tempAvailableAccounts) + 3) + ". Quit")
-        accountInput = input("\nType the account number to login. ")
+        accountInput = input("\nType the account number to login. ").replace(" ", "")
         if accountInput.isnumeric() or accountInput in availableAccounts:
             if accountInput == str(len(tempAvailableAccounts) + 1):
                 clear()
@@ -180,7 +180,7 @@ def accountLogin(accountAction):
             accountLanguage = "english"
             accountLogin("createAccount_3")
         elif createAccountStep == 3:
-            accountEmail = input(str("\n\n\n\nAn email is required strictly for when you forget your password or a verification code needs to be sent.\n\nWhat email would you like to use for your account? "))
+            accountEmail = input(str("\n\n\n\nAn email is required strictly for when you forget your password or a verification code needs to be sent.\n\nWhat email would you like to use for your account? ")).replace(" ", "")
             if accountEmail.lower() in ["cancel", "quit", "exit"]: librarySetup()
             elif accountEmail.lower() in ["back", "return"]: accountLogin("createAccount_1")
             elif "@" in accountEmail and "." in accountEmail: accountLogin("createAccount_4")
@@ -188,7 +188,7 @@ def accountLogin(accountAction):
                 print("\nThis email is not a valid email.")
                 accountLogin("createAccount_3")
         elif createAccountStep == 4:
-            if accountPassword == "": accountInput = input(str("\n\n\n\nA password will add more security to your account. The password will be required whenever an account action needs to take place.\n\nWould you like a password on your account? (yes/no) "))
+            if accountPassword == "": accountInput = input(str("\n\n\n\nA password will add more security to your account. The password will be required whenever an account action needs to take place.\n\nWould you like a password on your account? (yes/no) ")).replace(" ", "")
             else: accountInput = "yes"
             if accountInput.lower() in ["cancel", "quit", "exit"]: librarySetup()
             elif accountInput.lower() in ["back", "return"]: accountLogin("createAccount_3")
@@ -216,7 +216,7 @@ def accountLogin(accountAction):
         elif createAccountStep == 6:
             if accountPassword == "": print("\n\n\n\n2 factor verification will add more security to your account. This will be used whenever an account action needs to take place.")
             elif accountPassword != "": print("\n\n\n\n2 factor verification will add even more security to your account. This will be used with your password whenever an account action needs to take place.")
-            accountInput = input(str("\n2 factor verification will email you a code to type in when it is required.\n\nWould you like 2 factor verification on your account? (yes/no) "))
+            accountInput = input(str("\n2 factor verification will email you a code to type in when it is required.\n\nWould you like 2 factor verification on your account? (yes/no) ")).replace(" ", "")
             if accountInput.lower() in ["cancel", "quit", "exit"]: librarySetup()
             elif accountInput.lower() in ["back", "return"]:
                 accountPassword = ""
@@ -236,7 +236,7 @@ def accountLogin(accountAction):
             else: print("Account password: Inactive")
             if account2Way != "none": print("Account 2 factor verification: Active")
             else: print("Account 2 factor verification: Inactive")
-            accountInput = input(str("\nDo these account details look right? (yes/no) "))
+            accountInput = input(str("\nDo these account details look right? (yes/no) ")).replace(" ", "")
             if accountInput.lower() in ["back", "return"]: accountLogin("createAccount_6")
             elif accountInput.lower() in ["y", "yes"]:
                 availableAccounts.append(currentAccountUsername)
@@ -284,7 +284,7 @@ def accountLogin(accountAction):
             print("Delete Account:\n")
             for i in availableAccounts:
                 if i != "Default": print(str(availableAccounts.index(i) + 1) + ". " + i)
-            accountInput = input("\nType the account number to delete the account. ")
+            accountInput = input("\nType the account number to delete the account. ").replace(" ", "")
             if (accountInput < str(len(tempAvailableAccounts) + 1) and int(accountInput) > 0) or accountInput in availableAccounts:
                 if accountInput.isnumeric(): currentAccountUsername = availableAccounts[int(accountInput) - 1]
                 else: currentAccountUsername = accountInput
@@ -297,7 +297,7 @@ def accountLogin(accountAction):
                 accountLogin("deleteAccount")
         else:
             accountLogin("readSettings")
-            accountInput = input("Delete Account:\n\nAre you sure you would like to permanently delete " + currentAccountUsername + "'s account from all your games? (yes/no) ")
+            accountInput = input("Delete Account:\n\nAre you sure you would like to permanently delete " + currentAccountUsername + "'s account from all your games? (yes/no) ").replace(" ", "")
             if accountInput.lower() in ["y", "yes"]: accountLogin("deleteAccountForever")
             elif accountInput.lower() in ["cancel", "quit", "exit"]: librarySetup()
             elif accountInput.lower() in ["back", "return"]:
@@ -349,7 +349,7 @@ def accountLogin(accountAction):
             print("Change Account Password:")
         if accountPassword == "none":
             print("1.Add password")
-            accountInput = input(str("\nType the number of the action for " + currentAccountUsername + "'s password: "))
+            accountInput = input(str("\nType the number of the action for " + currentAccountUsername + "'s password: ")).replace(" ", "")
             if accountInput == "1":
                 accountPassword = input(str("\nWhat password would you like for your account? "))
                 pickle.dump([currentAccountUsername, accountLanguage, accountEmail, accountPassword, account2Way, lockDateTime], open(currentAccountInfoPath + "\\accountInformation.p", "wb"))
@@ -361,11 +361,11 @@ def accountLogin(accountAction):
                 accountLogin("changeAccountPassword")
         else:
             if emailconfirmed == False:
-                accountInput = input(str("\nType your email to confirm your identity: "))
+                accountInput = input(str("\nType your email to confirm your identity: ")).replace(" ", "")
                 if accountInput == accountEmail:
                     emailCode = randrange(100000, 999999)
                     accountLogin("emailAccount_resetPasswordCode")
-                    accountInput = input(str("\nA code has been sent to your email to manage your password. Type the code here: "))
+                    accountInput = input(str("\nA code has been sent to your email to manage your password. Type the code here: ")).replace(" ", "")
                 elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"]:
                     librarySetup()
                     return
@@ -376,7 +376,7 @@ def accountLogin(accountAction):
             if emailconfirmed == True or (accountInput == str(emailCode) and datetime.now() < emailExpireTime):
                 emailconfirmed = True
                 print("\n\n1.Change password\n2.Remove password")
-                accountInput = input(str("\nType the number of the action for " + currentAccountUsername + "'s password: "))
+                accountInput = input(str("\nType the number of the action for " + currentAccountUsername + "'s password: ")).replace(" ", "")
                 if accountInput == "1":
                     accountPassword = input(str("\nWhat new password would you like for your account? "))
                     if len(accountPassword) < 5:
@@ -413,7 +413,7 @@ def accountLogin(accountAction):
 ## Corrupt Account
     elif accountAction == "corruptAccount":
         clear()
-        accountInput = input(str("Corrupt Account:\n\n\n" + currentAccountUsername + "'s account is unreadable.\n\nWould you like to delete " + currentAccountUsername + "'s account? (yes/no) "))
+        accountInput = input(str("Corrupt Account:\n\n\n" + currentAccountUsername + "'s account is unreadable.\n\nWould you like to delete " + currentAccountUsername + "'s account? (yes/no) ")).replace(" ", "")
         if accountInput.lower() in ["y", "yes"]: accountLogin("deleteAccountForever")
         elif accountInput.lower() in ["n", "no"]: librarySetup()
         else:
@@ -500,7 +500,7 @@ def accountLogin(accountAction):
         if account2Way not in ["none", "unavailable"]:
             account2Way = randrange(100000, 999999)
             accountLogin("emailAccount_verificationCode")
-            accountInput = input(str("\nThis account has 2 factor verification enabled. An email has been sent with the code. Type the code here: "))
+            accountInput = input(str("\nThis account has 2 factor verification enabled. An email has been sent with the code. Type the code here: ")).replace(" ", "")
             if accountInput == str(account2Way) and datetime.now() < emailExpireTime: clear()
             elif accountInput.lower() in ["back", "quit", "return", "logout"]:
                 librarySetup()
@@ -708,7 +708,7 @@ def Achievements(achievementToGain):
 def testAchievements():
 ## Activate Achievement
     global exitSystem
-    userAnswer = input("\nINPUT: ")
+    userAnswer = input("\nINPUT: ").replace(" ", "")
     start = time.time()
     if userAnswer.lower() == "welcome":
         print("Rewarding achievement = Achievement_Welcome")
