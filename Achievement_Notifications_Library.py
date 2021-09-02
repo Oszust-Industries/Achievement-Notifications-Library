@@ -320,8 +320,7 @@ def accountLogin(accountAction):
 ## Rename Account
     elif accountAction == "renameAccount":
         newAccountUsername = input(str("\nRename Account:\n\nWhat would you like to rename " + currentAccountUsername + "'s account to? "))
-        if newAccountUsername.lower() in ["cancel", "quit", "exit", "back", "return"]:
-            librarySetup()
+        if newAccountUsername.lower() in ["cancel", "quit", "exit", "back", "return"]: librarySetup()
         elif newAccountUsername not in availableAccounts:
             if newAccountUsername.lower() not in badUsernames:
                 availableAccounts.remove(currentAccountUsername)
