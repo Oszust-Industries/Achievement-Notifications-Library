@@ -1,5 +1,5 @@
 ## Achievement Notifications Library v1.4.1 - Oszust Industries
-dateInformation = "Created on: 5-15-21 - Last update: 9-01-21"
+dateInformation = "Created on: 5-15-21 - Last update: 9-02-21"
 libraryVersion = "v1.4.1"
 newestAchievementVersion = libraryVersion
 import pickle
@@ -347,7 +347,7 @@ def accountLogin(accountAction):
             clear()
             print("Change Account Password:")
         if accountPassword == "none":
-            print("1.Add password")
+            print("\n\n1.Add password")
             accountInput = input(str("\nType the number of the action for " + currentAccountUsername + "'s password: ")).replace(" ", "")
             if accountInput == "1":
                 accountPassword = input(str("\nWhat password would you like for your account? "))
