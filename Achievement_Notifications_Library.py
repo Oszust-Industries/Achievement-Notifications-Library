@@ -88,10 +88,12 @@ def accountLogin(accountAction):
                 clear()
                 accountLogin("createAccount_1")
             elif accountInput == str(len(tempAvailableAccounts) + 2):
-                clear()
+                print("\n\nLoading Account...")
                 deactivateFileOpening = True
                 achievementsActivated = False
                 currentAccountUsername = "Guest"
+                accountLogin("readOwnedDLC")
+                clear()
             elif accountInput == str(len(tempAvailableAccounts) + 3) and len(tempAvailableAccounts) > 0:
                 clear()
                 accountLogin("deleteAccount")
@@ -540,14 +542,14 @@ def accountLogin(accountAction):
             if accountOwnedDLC[0] != currentAccountUsername:
                 accountLogin("corruptAccount")
                 return
-            for i in freeGameDLC:
-                if i not in accountOwnedDLC:
-                    accountOwnedDLC.extend((i, "enable"))
-            for i in accountOwnedDLC:
-                if accountOwnedDLC.index(i) < (len(accountOwnedDLC) - 1) and accountOwnedDLC[accountOwnedDLC.index(i) + 1] == "enable":
-                    accountActiveOwnedDLC.append(i)
-            pickle.dump(accountOwnedDLC, open(currentAccountPath + "\\accountOwnedDLC.p", "wb"))
-        else: accountActiveOwnedDLC = freeGameDLC
+        else: accountOwnedDLC = []
+        for i in freeGameDLC:
+            if i not in accountOwnedDLC:
+                accountOwnedDLC.extend((i, "enable"))
+        for i in accountOwnedDLC:
+            if accountOwnedDLC.index(i) < (len(accountOwnedDLC) - 1) and accountOwnedDLC[accountOwnedDLC.index(i) + 1] == "enable":
+                accountActiveOwnedDLC.append(i)
+        if deactivateFileOpening == False: pickle.dump(accountOwnedDLC, open(currentAccountPath + "\\accountOwnedDLC.p", "wb"))
 
 def clear():
 ## Clear Output
