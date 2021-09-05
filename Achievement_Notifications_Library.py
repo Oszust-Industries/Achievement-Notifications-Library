@@ -529,6 +529,9 @@ def accountLogin(accountAction):
 ## Save Settings
     elif accountAction == "saveSettings":
         if deactivateFileOpening == False: pickle.dump([achievementsActivated, resetAchievements], open(currentAccountPath + "\\settingsSave.p", "wb"))
+        elif deactivateFileOpening == True:
+            achievementsActivated = False
+            resetAchievements = False
 ## Read Owned DLC
     elif accountAction == "readOwnedDLC":
         freeGameDLC = []
