@@ -66,7 +66,6 @@ def accountLogin(accountAction):
             try: packedAccountGames = pickle.load(open(currentAccountInfoPath + "\\accountGames.p", "rb"))
             except OSError: accountLogin("createUserPath")
             accountLogin("readSettings")
-            clear()
             return
         tempAvailableAccounts = availableAccounts
         if "Default" in availableAccounts:
@@ -276,7 +275,7 @@ def accountLogin(accountAction):
                     currentAccountPath = str(currentAccountInfoPath + "\\" + systemName)
                     os.mkdir(currentAccountPath)
                 except OSError: pass
-                if currentAccountUsername.lower() == "default": packedAccountInformation = ["Default", bootLanguage, "Default", "none", "none", lockDateTime]
+                if currentAccountUsername.lower() == "default": packedAccountInformation = ["Default", "english", "Default", "none", "none", lockDateTime]
                 pickle.dump(packedAccountInformation, open(currentAccountInfoPath + "\\accountInformation.p", "wb"))
                 clear()
         if currentAccountUsername != "": accountLogin("readSettings")
