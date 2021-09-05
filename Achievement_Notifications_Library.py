@@ -1,5 +1,5 @@
 ## Achievement Notifications Library v1.4.1 - Oszust Industries
-dateInformation = "Created on: 5-15-21 - Last update: 9-02-21"
+dateInformation = "Created on: 5-15-21 - Last update: 9-04-21"
 libraryVersion = "v1.4.1"
 newestAchievementVersion = libraryVersion
 import pickle
@@ -690,10 +690,14 @@ def Achievements(achievementToGain):
 ## System Achievements Progress
     elif deactivateFileOpening == False and achievementsActivated == True and achievementToGain not in ["reset", "setup", "ready"] and "Progress" in achievementToGain:
         achievementToGain = achievementToGain.replace("Achievement_Progress_", "")
-        animalsCategory = int(achievementProgressTracker[0])
-        maxAnimalsCategory = int(achievementProgressTracker[1])
-        winningStreak = int(achievementProgressTracker[2])
-        maxWinningStreak = int(achievementProgressTracker[3])
+        if len(achievementProgressTracker) >= 1: animalsCategory = int(achievementProgressTracker[0])
+        else: animalsCategory = int(defaultAchievementProgressTracker[0])
+        if len(achievementProgressTracker) >= 2: maxAnimalsCategory = int(achievementProgressTracker[1])
+        else: maxAnimalsCategory = int(defaultAchievementProgressTracker[1])
+        if len(achievementProgressTracker) >= 11: winningStreak = int(achievementProgressTracker[10])
+        else: winningStreak = int(defaultAchievementProgressTracker[10])
+        if len(achievementProgressTracker) >= 12: maxWinningStreak = int(achievementProgressTracker[11])
+        else: maxWinningStreak = int(defaultAchievementProgressTracker[11])
         if achievementToGain == "Animals": animalsCategory += 1
         if animalsCategory >= maxAnimalsCategory: Achievements("Achievement_All_Animals")
 ## Streak Counter
