@@ -1,5 +1,5 @@
 ## Achievement Notifications Library v1.4.2 - Oszust Industries
-dateInformation = "Created on: 5-15-21 - Last update: 9-06-21"
+dateInformation = "Created on: 5-15-21 - Last update: 9-07-21"
 libraryVersion = "v1.4.2"
 newestAchievementVersion = libraryVersion
 import pickle
@@ -703,9 +703,9 @@ def Achievements(achievementToGain):
         if len(achievementProgressTracker) >= 12: maxWinningStreak = int(achievementProgressTracker[11])
         else: maxWinningStreak = int(defaultAchievementProgressTracker[11])
         if achievementToGain == "Animals": animalsCategory += 1
-        if animalsCategory >= maxAnimalsCategory: Achievements("Achievement_All_Animals")
+        if "Achievement_All_Animals" not in gained_Achievements and (animalsCategory >= maxAnimalsCategory): Achievements("Achievement_All_Animals")
 ## Streak Counter
-        if winningStreak >= maxWinningStreak: Achievements("Achievement_Hot_Streak")
+        if "Achievement_Hot_Streak" not in gained_Achievements and (winningStreak >= maxWinningStreak): Achievements("Achievement_Hot_Streak")
 ## Save Progress
         achievementProgressTracker = [animalsCategory, maxAnimalsCategory, winningStreak, maxWinningStreak]
         if overrideResetAchivements == False and resetAchievements == False and deactivateFileOpening == False: pickle.dump(achievementProgressTracker, open(currentAccountPath + "\\achievementProgressTracker.p", "wb"))
