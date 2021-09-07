@@ -20,4 +20,4 @@ A library is a program that is used in other Oszust Industries games. A library 
 
 ## Beta Warning:
 
-This release is a beta version. Beta releases are still tested and considered safe before being released. Unknown bugs may arise and need to reporting. If you find any bugs, please report them to the issue section. Thank you for your help in development.
+This release is a beta version. Beta releases are still tested and considered safe before being released. Unknown bugs may arise and need to be reported. If you find any bugs, please report them to the issue section. Thank you for your help in development.
