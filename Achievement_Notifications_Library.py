@@ -38,7 +38,7 @@ def accountLogin(accountAction):
     import shutil
     from random import randint, randrange
     import math
-    global account2Way, accountEmail, accountInput, accountLanguage, accountOwnedDLC, accountPassword, achievementsActivated, availableAccounts, currentAccountInfoPath, currentAccountPath, currentAccountUsername, deactivateFileOpening, emailCode, emailExpireTime, emailconfirmed, enableAccountSystem, exitSystem, expiredCodes, lockDateTime, packedAccountGames, packedAccountInformation, packedSettings, passwordAttemptsLeft, resetAchievements, tempAvailableAccounts
+    global account2Way, accountEmail, accountInput, accountLanguage, accountOwnedDLC, accountPassword, achievementsActivated, availableAccounts, currentAccountInfoPath, currentAccountPath, currentAccountUsername, deactivateFileOpening, emailCode, emailExpireTime, emailconfirmed, enableAccountSystem, exitSystem, expiredCodes, lockDateTime, packedAccountGames, packedAccountInformation, packedSettings, passwordAttemptsLeft, resetAchievements, startedCreateAccount, tempAvailableAccounts
     weakPasswords = ["1234", "password", "forgot password", "forgotpassword", "default", "incorrect", "back", "quit", "return", "logout"]
     badUsernames = ["disneyhockey40", "guest", "default", ""]
 ## Account Setup
@@ -85,6 +85,7 @@ def accountLogin(accountAction):
         if accountInput.isnumeric() or accountInput in availableAccounts:
             if accountInput == str(len(tempAvailableAccounts) + 1):
                 clear()
+                startedCreateAccount = False
                 accountLogin("createAccount_1")
             elif accountInput == str(len(tempAvailableAccounts) + 2):
                 print("\n\nLoading Account...")
@@ -165,8 +166,9 @@ def accountLogin(accountAction):
     elif "createAccount" in accountAction:
         createAccountStep = int(accountAction.replace("createAccount_", ""))
         if createAccountStep == 1:
-            if currentAccountUsername == "": print("Create Account:\n\nType 'back' to return to the previous prompt.\nType 'cancel' to cancel create account.")
+            if startedCreateAccount == False: print("Create Account:\n\nType 'back' to return to the previous prompt.\nType 'cancel' to cancel create account.")
             currentAccountUsername = input(str("\n\n\nA username is your name that you will select when logging into the server.\n\nWhat username would you like for your account? "))
+            startedCreateAccount = True
             if currentAccountUsername.lower() in ["cancel", "quit", "exit", "back", "return"]: librarySetup()
             elif currentAccountUsername not in availableAccounts:
                 if currentAccountUsername.lower() not in badUsernames: accountLogin("createAccount_2")
@@ -286,6 +288,7 @@ def accountLogin(accountAction):
             for i in availableAccounts:
                 if i != "Default": print(str(availableAccounts.index(i) + 1) + ". " + i)
             accountInput = input("\nType the account number to delete the account. ").replace(" ", "")
+            if accountInput == "": accountInput = "0"
             if (accountInput < str(len(tempAvailableAccounts) + 1) and int(accountInput) > 0) or accountInput in availableAccounts:
                 if accountInput.isnumeric(): currentAccountUsername = availableAccounts[int(accountInput) - 1]
                 else: currentAccountUsername = accountInput
