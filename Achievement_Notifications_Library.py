@@ -1,6 +1,6 @@
-## Achievement Notifications Library v1.4.1 - Oszust Industries
-dateInformation = "Created on: 5-15-21 - Last update: 9-04-21"
-libraryVersion = "v1.4.1"
+## Achievement Notifications Library v1.4.2 - Oszust Industries
+dateInformation = "Created on: 5-15-21 - Last update: 9-06-21"
+libraryVersion = "v1.4.2"
 newestAchievementVersion = libraryVersion
 import pickle
 import re
@@ -591,10 +591,10 @@ def Achievements(achievementToGain):
 ## Setup System
     elif achievementToGain == "setup":
         if deactivateFileOpening == False:
-            bronzeIcon = r"./Achievement Icons/ps5-bronze-trophy.ico"
-            silverIcon = r"./Achievement Icons/ps5-silver-trophy.ico"
-            goldIcon = r"./Achievement Icons/ps5-gold-trophy.ico"
-            platinumIcon = r"./Achievement Icons/ps5-platinum-trophy.ico"
+            bronzeIcon = r"./Achievement Icons/Bronze-trophy.ico"
+            silverIcon = r"./Achievement Icons/Silver-trophy.ico"
+            goldIcon = r"./Achievement Icons/Gold-trophy.ico"
+            platinumIcon = r"./Achievement Icons/(game)-Platinum-trophy.ico"
         if enableAchievementThreading == True:
             import threading
             backroundAchievementThread = threading.Thread(name='waitingAchievements', target=waitingAchievements)
@@ -657,7 +657,10 @@ def Achievements(achievementToGain):
         waitingAchievementsList.append(str(achievementToGain))
         return
     if deactivateFileOpening == False and achievementsActivated == True and achievementToGain not in ["reset", "setup", "ready"] and "Progress" not in achievementToGain and achievementToGain not in gained_Achievements:
-        if achievementToGain == "Achievement_Welcome":
+        if achievementToGain == "Achievement_DEBUG":
+            toaster.show_toast("Trophy Level - Achievement Title", str("Achievement Description." + "\n(" + currentAccountUsername + ")"), icon_path = bronzeIcon, duration=5, threaded=enableAchievementThreading)
+            if achievementVersion not in ["v1.0.0"]: medalEarned = "Bronze"
+        elif achievementToGain == "Achievement_Welcome":
             toaster.show_toast("Start a new game. - 1", str("Bronze - Welcome to the Game - 1" + "\n(" + currentAccountUsername + ")"), icon_path = bronzeIcon, duration=5, threaded=enableAchievementThreading)
             if achievementVersion not in ["v1.0.0"]: medalEarned = "Bronze"
         elif achievementToGain == "Achievement_Welcome2":
@@ -666,15 +669,12 @@ def Achievements(achievementToGain):
         elif achievementToGain == "Achievement_Welcome3":
             toaster.show_toast("Bronze - Welcome to the Game - 3", str("Start a new game. - 3" + "\n(" + currentAccountUsername + ")"), icon_path = bronzeIcon, duration=5, threaded=enableAchievementThreading)
             if achievementVersion not in ["v1.0.0"]: medalEarned = "Bronze"
-        elif achievementToGain == "Achievement_All_Animals":
-            toaster.show_toast("Gold - Zoologist", str("Complete all the game topics in the animals category." + "\n(" + currentAccountUsername + ")"), icon_path = goldIcon, duration=5, threaded=enableAchievementThreading)
-            if achievementVersion not in ["v1.0.0"]: medalEarned = "Gold"
         elif achievementToGain == "Achievement_Hot_Streak":
             toaster.show_toast("Silver - You're on Fire!", str("Go on a streak of 5 correct games." + "\n(" + currentAccountUsername + ")"), icon_path = silverIcon, duration=5, threaded=enableAchievementThreading)
             if achievementVersion not in ["v1.0.0"]: medalEarned = "Silver"
-        elif achievementToGain == "Achievement_DEBUG":
-            toaster.show_toast("Trophy Level - Achievement Title", str("Achievement Description." + "\n(" + currentAccountUsername + ")"), icon_path = bronzeIcon, duration=5, threaded=enableAchievementThreading)
-            if achievementVersion not in ["v1.0.0"]: medalEarned = "Bronze"
+        elif achievementToGain == "Achievement_All_Animals":
+            toaster.show_toast("Gold - Zoologist", str("Complete all the game topics in the animals category." + "\n(" + currentAccountUsername + ")"), icon_path = goldIcon, duration=5, threaded=enableAchievementThreading)
+            if achievementVersion not in ["v1.0.0"]: medalEarned = "Gold"
         elif achievementToGain != "saving": print("GAME ERROR(No Achievement with that name found)")
         if achievementVersion not in ["v1.0.0"] and achievementToGain != "saving":
             if medalEarned == "Bronze": earnedBronze += 1
