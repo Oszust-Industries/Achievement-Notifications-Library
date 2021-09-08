@@ -580,7 +580,8 @@ def Achievements(achievementToGain):
     else: lastPlaytimeDatePlayed = "Currently In-game"
 ## Reset Achievements
     if achievementToGain == "reset":
-        print("Loading 1/2: (Resetting achievements - " + newestAchievementVersion + ")...")
+        if resetSettings == True: print("Loading 1/2: (Resetting settings)...\nLoading 2/2: (Resetting achievements - " + newestAchievementVersion + ")...\n\n\n")
+        else: print("Loading 1/1: (Resetting achievements - " + newestAchievementVersion + ")...\n\n\n")
         achievementProgressTracker = defaultAchievementProgressTracker
         if newestAchievementVersion not in ["v1.0.0", "v1.1.0", "v1.2.0"]: gained_Achievements = [newestAchievementVersion, lastPlaytimeDatePlayed, currentPlaytime, availableAchievements, 0, 0, 0, 0,]
         elif newestAchievementVersion not in ["v1.0.0"]: gained_Achievements = [availableAchievements, 0, 0, 0, 0,]
@@ -718,6 +719,7 @@ def Achievements(achievementToGain):
 def testAchievements():
 ## Activate Achievement
     global exitSystem
+    if resetSettings == True and (overrideResetAchivements == False and resetAchievements == False): print("\nLoading 1/1: (Resetting settings)...")
     userAnswer = input("\nINPUT: ").replace(" ", "")
     start = time.time()
     if userAnswer.lower() == "welcome":
