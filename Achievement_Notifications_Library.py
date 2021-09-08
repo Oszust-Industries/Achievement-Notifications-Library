@@ -1,5 +1,5 @@
 ## Achievement Notifications Library v1.4.2 - Oszust Industries
-dateInformation = "Created on: 5-15-21 - Last update: 9-07-21"
+dateInformation = "Created on: 5-15-21 - Last update: 9-08-21"
 libraryVersion = "v1.4.2"
 newestAchievementVersion = libraryVersion
 import pickle
@@ -171,7 +171,7 @@ def accountLogin(accountAction):
             startedCreateAccount = True
             if currentAccountUsername.lower() in ["cancel", "quit", "exit", "back", "return"]: librarySetup()
             elif currentAccountUsername not in availableAccounts:
-                if currentAccountUsername.lower() not in badUsernames: accountLogin("createAccount_2")
+                if currentAccountUsername.lower().replace(" ", "") not in badUsernames: accountLogin("createAccount_2")
                 else:
                     print("\nThis username is unavailable.")
                     accountLogin("createAccount_1")
