@@ -4,7 +4,7 @@ Achievement Notifications Library has an account system and an Achievement syste
 
 Release Date: May 15, 2021
 
-Developer: Oszust Industries
+Developer: [Oszust Industries](https://github.com/Oszust-Industries)
 
 <br /> Developer Library
 
