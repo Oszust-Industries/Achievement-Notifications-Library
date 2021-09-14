@@ -12,7 +12,7 @@ Languages: English
 
 <br /> This library uses [Windows 10 Toast](https://pypi.org/project/win10toast/) package to display notifications on your system.
 
-This game writes and reads files onto your computer for game saves.
+This library reads and writes files onto your computer for game saves.
 
 ## Library Infomation:
 
