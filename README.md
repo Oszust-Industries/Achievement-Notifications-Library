@@ -10,9 +10,12 @@ Developer: [Oszust Industries](https://github.com/Oszust-Industries)
 
 Languages: English
 
-<br /> This library uses [Windows 10 Toast](https://pypi.org/project/win10toast/) package to display notifications on your system.
+<br /> This library reads and writes game saves on your computer.
 
-This library reads and writes game saves on your computer.
+This library uses [Windows 10 Toast](https://pypi.org/project/win10toast/) package to display notifications on your system.
+
+#### Install Windows 10 Toast:
+Open Command Prompt and type: pip install win10toast
 
 ## Library Infomation:
 
