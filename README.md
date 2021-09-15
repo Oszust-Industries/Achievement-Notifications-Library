@@ -10,7 +10,7 @@ Developer: [Oszust Industries](https://github.com/Oszust-Industries)
 
 Languages: English
 
-This library reads and writes game saves on your computer.
+<br /> This library reads and writes game saves on your computer.
 
 This library uses [Windows 10 Toast](https://pypi.org/project/win10toast/) package to display notifications on your system.
 
