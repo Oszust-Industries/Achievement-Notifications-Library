@@ -1,11 +1,11 @@
-## Achievement Notifications Library v1.4.2 - Oszust Industries
-dateInformation = "Created on: 5-15-21 - Last update: 9-08-21"
-libraryVersion = "v1.4.2"
+## Achievement Notifications Library v1.4.3 - Oszust Industries
+dateInformation = "Created on: 5-15-21 - Last update: 9-16-21"
+libraryVersion = "v1.4.3"
 newestAchievementVersion = libraryVersion
+from datetime import datetime, date, timedelta
 import pickle
 import re
 import time
-from datetime import datetime, date, timedelta
 
 def libraryConfig():
 ## System Configures
@@ -34,10 +34,10 @@ def librarySetup():
 
 def accountLogin(accountAction):
 ## Save User Settings
-    import os
-    import shutil
     from random import randint, randrange
     import math
+    import os
+    import shutil
     global account2Way, accountEmail, accountInput, accountLanguage, accountOwnedDLC, accountPassword, achievementsActivated, availableAccounts, currentAccountInfoPath, currentAccountPath, currentAccountUsername, deactivateFileOpening, emailCode, emailExpireTime, emailconfirmed, enableAccountSystem, exitSystem, expiredCodes, lockDateTime, packedAccountGames, packedAccountInformation, packedSettings, passwordAttemptsLeft, resetAchievements, startedCreateAccount, tempAvailableAccounts
     weakPasswords = ["1234", "password", "forgot password", "forgotpassword", "default", "incorrect", "back", "quit", "return", "logout"]
     badUsernames = ["disneyhockey40", "guest", "default", ""]
@@ -83,25 +83,25 @@ def accountLogin(accountAction):
         else: print(str(len(tempAvailableAccounts) + 3) + ". Quit")
         accountInput = input("\nType the account number to login. ").replace(" ", "")
         if accountInput.isnumeric() or accountInput in availableAccounts:
-            if accountInput == str(len(tempAvailableAccounts) + 1):
+            if int(accountInput) == len(tempAvailableAccounts) + 1:
                 clear()
                 startedCreateAccount = False
                 accountLogin("createAccount_1")
-            elif accountInput == str(len(tempAvailableAccounts) + 2):
+            elif int(accountInput) == len(tempAvailableAccounts) + 2:
                 print("\n\nLoading Account...")
                 deactivateFileOpening = True
                 achievementsActivated = False
                 currentAccountUsername = "Guest"
                 accountLogin("readOwnedDLC")
                 clear()
-            elif accountInput == str(len(tempAvailableAccounts) + 3) and len(tempAvailableAccounts) > 0:
+            elif int(accountInput) == len(tempAvailableAccounts) + 3 and len(tempAvailableAccounts) > 0:
                 clear()
                 accountLogin("deleteAccount")
-            elif accountInput == str(len(tempAvailableAccounts) + 3) and len(tempAvailableAccounts) <= 0:
+            elif int(accountInput) == len(tempAvailableAccounts) + 3 and len(tempAvailableAccounts) <= 0:
                     accountLogin("quit")
-            elif accountInput == str(len(tempAvailableAccounts) + 4) and len(tempAvailableAccounts) > 0:
+            elif int(accountInput) == len(tempAvailableAccounts) + 4 and len(tempAvailableAccounts) > 0:
                     accountLogin("quit")
-            elif (accountInput < str(len(tempAvailableAccounts) + 1) and int(accountInput) > 0) or accountInput in availableAccounts:
+            elif (int(accountInput) < len(tempAvailableAccounts) + 1 and int(accountInput) > 0) or accountInput in availableAccounts:
                 if accountInput.isnumeric(): currentAccountUsername = availableAccounts[int(accountInput) - 1]
                 else: currentAccountUsername = accountInput
                 currentAccountInfoPath = str(os.getenv('APPDATA') + "\\Oszust Industries\\Accounts\\" + currentAccountUsername)
@@ -135,32 +135,24 @@ def accountLogin(accountAction):
     elif "emailAccount" in accountAction:
         if deactivateFileOpening == False:
             print("Loading verification system...")
-            emailMessage = str(accountAction.replace("emailAccount_", ""))
             import smtplib
-            import ssl
+            systemEmail = "noreply.oszustindustries@gmail.com"
             oo7 = pickle.load(open(str(os.getenv('APPDATA') + "\\Oszust Industries\\Data.p"), "rb"))
-            port = 587
-            smtp_server = "smtp.gmail.com"
-            sender_email = "noreply.oszustindustries@gmail.com"
-            receiver_email = accountEmail
-            emailExpireTime = datetime.now() + timedelta(minutes=5)
+            emailMessage = str(accountAction.replace("emailAccount_", ""))
+            to = [accountEmail]
             if emailMessage == "resetPasswordCode":
-                message = """\
-                Subject: Manage Password Code
-
-                \nBelow is the code to manage the password for your Oszust Industries account:\n\n""" + str(emailCode) + "\n\nThis code expires in 5 minutes.\n\n\nOszust Industries (no-reply)"""
+                subject = "Manage Password Code"
+                body = "Below is the code to manage the password for your Oszust Industries account:\n\n" + str(emailCode) + "\n\nThis code expires in 5 minutes.\n\n\nOszust Industries (no-reply)"
             elif emailMessage == "verificationCode":
-                message = """\
-                Subject: Verification Code
-
-                \nBelow is the code to login into your Oszust Industries account:\n\n""" + str(account2Way) + "\n\nThis code expires in 5 minutes.\n\n\nOszust Industries (no-reply))"""
-            context = ssl.create_default_context()
-            with smtplib.SMTP(smtp_server, port) as server:
-                server.ehlo()
-                server.starttls(context=context)
-                server.ehlo()
-                server.login(sender_email, oo7)
-                server.sendmail(sender_email, receiver_email, message)
+                subject = "Verification Code"
+                body = "Below is the code to login into your Oszust Industries account:\n\n""" + str(account2Way) + "\n\nThis code expires in 5 minutes.\n\n\nOszust Industries (no-reply))"
+            message = 'Subject: {}\n\n{}'.format(subject, body)
+            smtp_server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+            smtp_server.ehlo()
+            smtp_server.login(systemEmail, oo7)
+            smtp_server.sendmail(systemEmail, to, message)
+            emailExpireTime = datetime.now() + timedelta(minutes=5)
+            smtp_server.close()
             print("\nBe sure to check your junk mail for the email.\n")
 ## Create Account
     elif "createAccount" in accountAction:
@@ -572,9 +564,12 @@ def waitingAchievements():
 
 def Achievements(achievementToGain):
 ## Achievement System
+    from pathlib import Path
+    from shutil import copy
     global achievementProgressTracker, achievementVersion, availableAchievements, bronzeIcon, currentPlaytime, earnedBronze, earnedGold, earnedPlatinum, earnedSilver, gained_Achievements, goldIcon, lastPlaytimeDatePlayed, platinumIcon, playtimeStartTime, resetAchievements, silverIcon, toaster, waitingAchievementsList
     availableAchievements = 5
     defaultAchievementProgressTracker = [0, 10, 0, 5]
+    if False and deactivateFileOpening == False: copy(str(Path(__file__).resolve().parent) + "\\Achievements.json", currentAccountPath)
 ## Last Play Date
     if exitSystem == True: lastPlaytimeDatePlayed = date.today().strftime("%m/%d/%y")
     else: lastPlaytimeDatePlayed = "Currently In-game"
@@ -595,15 +590,15 @@ def Achievements(achievementToGain):
 ## Setup System
     elif achievementToGain == "setup":
         if deactivateFileOpening == False:
-            bronzeIcon = r"./Achievement Icons/Bronze-trophy.ico"
-            silverIcon = r"./Achievement Icons/Silver-trophy.ico"
-            goldIcon = r"./Achievement Icons/Gold-trophy.ico"
-            platinumIcon = r"./Achievement Icons/(game)-Platinum-trophy.ico"
+            bronzeIcon = str(Path(__file__).resolve().parent) + "\Achievement Icons\Bronze-trophy.ico"
+            silverIcon = str(Path(__file__).resolve().parent) + "\Achievement Icons\Silver-trophy.ico"
+            goldIcon = str(Path(__file__).resolve().parent) + "\Achievement Icons\Gold-trophy.ico"
+            platinumIcon = str(Path(__file__).resolve().parent) + "\Achievement Icons\Hangman-Platinum-trophy.ico"
         if enableAchievementThreading == True:
             import threading
             backroundAchievementThread = threading.Thread(name='waitingAchievements', target=waitingAchievements)
-            backroundAchievementThread.start()
             waitingAchievementsList = []
+            backroundAchievementThread.start()
         if deactivateFileOpening == False:
             try:
                 gained_Achievements = pickle.load(open(currentAccountPath + "\\achievementSave.p", "rb"))
