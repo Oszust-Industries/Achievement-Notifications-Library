@@ -22,7 +22,9 @@ def libraryConfig():
 
 def librarySetup():
 ## Setup Software
+    global accountReady
     clear()
+    accountReady = False
     ##print("Oszust Industries Login System:\n\n")
     print("Achievement Notifications Library " + libraryVersion + " - Oszust Industries"
             "\n" + dateInformation + "\nLibrary Version: " + libraryVersion + "\n\n")
@@ -286,7 +288,8 @@ def accountLogin(accountAction):
                 else: currentAccountUsername = accountInput
                 currentAccountPath = str(os.getenv('APPDATA') + "\\Oszust Industries\\Accounts\\" + currentAccountUsername + "\\" + systemName)
                 accountLogin("deleteAccount")
-            elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"]: librarySetup()
+            elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"] and accountReady == True: settingsMenu("", False)
+            elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"] and accountReady == False: librarySetup()
             else:
                 clear()
                 print("You typed an unavailable account number.\n\n\n")
@@ -295,12 +298,10 @@ def accountLogin(accountAction):
             accountLogin("readSettings")
             accountInput = input("Delete Account:\n\nAre you sure you would like to permanently delete " + currentAccountUsername + "'s account from all your games? (yes/no) ").replace(" ", "")
             if accountInput.lower() in ["y", "yes"]: accountLogin("deleteAccountForever")
-            elif accountInput.lower() in ["cancel", "quit", "exit"]: librarySetup()
-            elif accountInput.lower() in ["back", "return"]:
-                clear()
-                currentAccountUsername = ""
-                accountLogin("deleteAccount")
-            elif accountInput.lower() in ["n", "no"]: librarySetup()
+            elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"] and accountReady == True: settingsMenu("", False)
+            elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"] and accountReady == False: librarySetup()
+            elif accountInput.lower() in ["n", "no"] and accountReady == True: settingsMenu("", False)
+            elif accountInput.lower() in ["n", "no"] and accountReady == False: librarySetup()
             else: accountLogin("deleteAccount")
 ## Delete Account Forever
     elif accountAction == "deleteAccountForever":
@@ -316,7 +317,8 @@ def accountLogin(accountAction):
 ## Rename Account
     elif accountAction == "renameAccount":
         newAccountUsername = input(str("\nRename Account:\n\nWhat would you like to rename " + currentAccountUsername + "'s account to? "))
-        if newAccountUsername.lower() in ["cancel", "quit", "exit", "back", "return"]: librarySetup()
+        if accountInput.lower() in ["cancel", "quit", "exit", "back", "return"] and accountReady == True: settingsMenu("", False)
+        elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"] and accountReady == False: librarySetup()
         elif newAccountUsername not in availableAccounts:
             if newAccountUsername.lower() not in badUsernames:
                 availableAccounts.remove(currentAccountUsername)
@@ -349,7 +351,8 @@ def accountLogin(accountAction):
                 accountPassword = input(str("\nWhat password would you like for your account? "))
                 pickle.dump([currentAccountUsername, accountLanguage, accountEmail, accountPassword, account2Way, lockDateTime], open(currentAccountInfoPath + "\\accountInformation.p", "wb"))
                 print("\n\nThe password has been added to your account.")
-            elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"]: librarySetup()
+            elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"] and accountReady == True: settingsMenu("", False)
+            elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"] and accountReady == False: librarySetup()
             else:
                 clear()
                 print("Please type one of the following actions.\n\n\n")
@@ -361,7 +364,10 @@ def accountLogin(accountAction):
                     emailCode = randrange(100000, 999999)
                     accountLogin("emailAccount_resetPasswordCode")
                     accountInput = input(str("\nA code has been sent to your email to manage your password. Type the code here: ")).replace(" ", "")
-                elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"]:
+                elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"] and accountReady == True:
+                    settingsMenu("", False)
+                    return
+                elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"] and accountReady == False:
                     librarySetup()
                     return
                 else:
@@ -390,12 +396,14 @@ def accountLogin(accountAction):
                     print("\n\nThe password has been removed from your account.")
                     clear()
                     accountLogin("readSettings")
-                elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"]: librarySetup()
+                elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"] and accountReady == True: settingsMenu("", False)
+                elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"] and accountReady == False: librarySetup()
                 else:
                     clear()
                     print("Please type one of the following actions.\n\n\n")
                     accountLogin("changeAccountPassword")
-            elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"]: librarySetup()
+            elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"] and accountReady == True: settingsMenu("", False)
+            elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"] and accountReady == False: librarySetup()
             elif (accountInput == str(emailCode) and datetime.now() >= emailExpireTime) or int(accountInput) in expiredCodes:
                 print("\n\nThis code has expired. A new code has been sent to your email.")
                 expiredCodes = expiredCodes.append(account2Way)
