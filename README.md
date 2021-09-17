@@ -14,9 +14,6 @@ Languages: English
 
 This library uses [Windows 10 Toast](https://pypi.org/project/win10toast/) package to display notifications on your system.
 
-#### Install Windows 10 Toast:
-Open Command Prompt and type: pip install win10toast
-
 ## Library Infomation:
 
 A library is a program that is used in other Oszust Industries games. A library can be used by the average user but is more valuable to developers.
