@@ -1,8 +1,9 @@
-## Achievement Notifications Library v1.4.3 - Oszust Industries
-dateInformation = "Created on: 5-15-21 - Last update: 9-16-21"
-libraryVersion = "v1.4.3"
+## Achievement Notifications Library v1.4.4 - Oszust Industries
+dateInformation = "Created on: 5-15-21 - Last update: 9-17-21"
+libraryVersion = "v1.4.4"
 newestAchievementVersion = libraryVersion
 from datetime import datetime, date, timedelta
+import os
 import pickle
 import re
 import time
@@ -38,7 +39,6 @@ def accountLogin(accountAction):
 ## Save User Settings
     from random import randint, randrange
     import math
-    import os
     import shutil
     global account2Way, accountEmail, accountInput, accountLanguage, accountOwnedDLC, accountPassword, achievementsActivated, availableAccounts, currentAccountInfoPath, currentAccountPath, currentAccountUsername, deactivateFileOpening, emailCode, emailExpireTime, emailconfirmed, enableAccountSystem, exitSystem, expiredCodes, lockDateTime, packedAccountGames, packedAccountInformation, packedSettings, passwordAttemptsLeft, resetAchievements, startedCreateAccount, tempAvailableAccounts
     weakPasswords = ["1234", "password", "forgot password", "forgotpassword", "default", "incorrect", "back", "quit", "return", "logout"]
@@ -621,7 +621,12 @@ def Achievements(achievementToGain):
         elif deactivateFileOpening == True and achievementsActivated == True: Achievements("reset")
 ## Load Achievement System
         if deactivateFileOpening == False and achievementsActivated == True:
-            from win10toast import ToastNotifier
+            try: from win10toast import ToastNotifier
+            except:
+                print("Installing required packages...\n\n\n")
+                os.system("pip install win10toast")
+                from win10toast import ToastNotifier
+                clear()
             toaster = ToastNotifier()
             try: gained_Achievements = pickle.load(open(currentAccountPath + "\\achievementSave.p", "rb"))
             except OSError: Achievements("reset")
