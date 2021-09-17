@@ -16,4 +16,4 @@ This library uses [Windows 10 Toast](https://pypi.org/project/win10toast/) packa
 
 ## Library Infomation:
 
-A library is a program that is used in other Oszust Industries games. A library can be used by the average user but is more valuable to developers.
+A library is a program that is used in other Oszust Industries games and softwares. A library can be used by the average user but is more valuable to developers.
