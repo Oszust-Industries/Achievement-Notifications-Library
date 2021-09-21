@@ -1,5 +1,5 @@
 ## Achievement Notifications Library v1.4.4 - Oszust Industries
-dateInformation = "Created on: 5-15-21 - Last update: 9-20-21"
+dateInformation = "Created on: 5-15-21 - Last update: 9-21-21"
 libraryVersion = "v1.4.4"
 newestAchievementVersion = libraryVersion
 from datetime import datetime, date, timedelta
