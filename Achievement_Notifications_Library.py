@@ -630,7 +630,7 @@ def Achievements(achievementToGain):
                     clear()
                 except:
                     print("Packages Failed to install...\n\nDisabling achievements...\n\n\n")
-                    clear()
+                    achievementsActivated = False
                     Achievements("setup")
                     return
             toaster = ToastNotifier()
