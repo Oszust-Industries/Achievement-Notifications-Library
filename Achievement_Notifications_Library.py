@@ -629,7 +629,7 @@ def Achievements(achievementToGain):
                     from win10toast import ToastNotifier
                     clear()
                 except:
-                    print("Packages Failed to install.\n\nDisabling achievements...\n\n\n")
+                    print("Packages failed to install.\n\nDisabling achievements...\n\n\n")
                     achievementsActivated = False
                     Achievements("setup")
                     return
