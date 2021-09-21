@@ -574,7 +574,7 @@ def Achievements(achievementToGain):
 ## Achievement System
     from pathlib import Path
     from shutil import copy
-    global achievementProgressTracker, achievementVersion, availableAchievements, bronzeIcon, currentPlaytime, earnedBronze, earnedGold, earnedPlatinum, earnedSilver, gained_Achievements, goldIcon, lastPlaytimeDatePlayed, platinumIcon, playtimeStartTime, resetAchievements, silverIcon, toaster, waitingAchievementsList
+    global achievementProgressTracker, achievementVersion, achievementsActivated, availableAchievements, bronzeIcon, currentPlaytime, earnedBronze, earnedGold, earnedPlatinum, earnedSilver, gained_Achievements, goldIcon, lastPlaytimeDatePlayed, platinumIcon, playtimeStartTime, resetAchievements, silverIcon, toaster, waitingAchievementsList
     availableAchievements = 5
     defaultAchievementProgressTracker = [0, 10, 0, 5]
     if False and deactivateFileOpening == False: copy(str(Path(__file__).resolve().parent) + "\\Achievements.json", currentAccountPath)
