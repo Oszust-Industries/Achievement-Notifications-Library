@@ -1,6 +1,6 @@
-## Achievement Notifications Library v1.4.4 - Oszust Industries
+## Achievement Notifications Library v1.4.5 - Oszust Industries
 dateInformation = "Created on: 5-15-21 - Last update: 9-22-21"
-libraryVersion = "v1.4.4"
+libraryVersion = "v1.4.5-Beta(21.9.22.1)"
 newestAchievementVersion = libraryVersion
 from datetime import datetime, date, timedelta
 import os
@@ -574,7 +574,7 @@ def Achievements(achievementToGain):
 ## Achievement System
     from pathlib import Path
     from shutil import copy
-    global achievementProgressTracker, achievementVersion, achievementsActivated, availableAchievements, bronzeIcon, currentPlaytime, earnedBronze, earnedGold, earnedPlatinum, earnedSilver, gained_Achievements, goldIcon, lastPlaytimeDatePlayed, platinumIcon, playtimeStartTime, resetAchievements, silverIcon, toaster, waitingAchievementsList
+    global win10ToastActive, achievementProgressTracker, achievementVersion, achievementsActivated, availableAchievements, bronzeIcon, currentPlaytime, earnedBronze, earnedGold, earnedPlatinum, earnedSilver, gained_Achievements, goldIcon, lastPlaytimeDatePlayed, platinumIcon, playtimeStartTime, resetAchievements, silverIcon, toaster, waitingAchievementsList
     availableAchievements = 5
     defaultAchievementProgressTracker = [0, 10, 0, 5]
     if False and deactivateFileOpening == False: copy(str(Path(__file__).resolve().parent) + "\\Achievements.json", currentAccountPath)
@@ -621,20 +621,23 @@ def Achievements(achievementToGain):
         elif deactivateFileOpening == True and achievementsActivated == True: Achievements("reset")
 ## Load Achievement System
         if deactivateFileOpening == False and achievementsActivated == True:
-            try: from win10toast import ToastNotifier
+            try:
+                from win10toast import ToastNotifier
+                win10ToastActive = True
             except:
                 try:
                     print("Installing required packages...\n\n\n")
                     os.system("pip install win10toast")
                     from win10toast import ToastNotifier
+                    win10ToastActive = True
                     clear()
                 except:
                     clear()
                     print("Packages failed to install.\n\nDisabling achievements...\n\n\n")
-                    achievementsActivated = False
+                    win10ToastActive = False
                     Achievements("setup")
                     return
-            toaster = ToastNotifier()
+            if win10ToastActive == True: toaster = ToastNotifier()
             try: gained_Achievements = pickle.load(open(currentAccountPath + "\\achievementSave.p", "rb"))
             except OSError: Achievements("reset")
         else: toaster = ""
@@ -666,33 +669,33 @@ def Achievements(achievementToGain):
                 earnedPlatinum = int(gained_Achievements[4])
         elif achievementsActivated == True:
             achievementVersion = newestAchievementVersion
-            toaster = ""
+            win10ToastActive = False
         Achievements("saving")
         if achievementsActivated == True:
             print("Current Achievements: " + str(gained_Achievements))
             print("Current Version: " + achievementVersion)
 ## System Achievements
-    if toaster != "" and toaster.notification_active() and enableAchievementThreading == True:
+    if win10ToastActive == True and toaster.notification_active() and enableAchievementThreading == True:
         waitingAchievementsList.append(str(achievementToGain))
         return
     if deactivateFileOpening == False and achievementsActivated == True and achievementToGain not in ["reset", "setup", "ready"] and "Progress" not in achievementToGain and achievementToGain not in gained_Achievements:
         if achievementToGain == "Achievement_DEBUG":
-            toaster.show_toast("Trophy Level - Achievement Title", str("Achievement Description." + "\n(" + currentAccountUsername + ")"), icon_path = bronzeIcon, duration=5, threaded=enableAchievementThreading)
+            if win10ToastActive == True: toaster.show_toast("Trophy Level - Achievement Title", str("Achievement Description." + "\n(" + currentAccountUsername + ")"), icon_path = bronzeIcon, duration=5, threaded=enableAchievementThreading)
             if achievementVersion not in ["v1.0.0"]: medalEarned = "Bronze"
         elif achievementToGain == "Achievement_Welcome":
-            toaster.show_toast("Start a new game. - 1", str("Bronze - Welcome to the Game - 1" + "\n(" + currentAccountUsername + ")"), icon_path = bronzeIcon, duration=5, threaded=enableAchievementThreading)
+            if win10ToastActive == True: toaster.show_toast("Start a new game. - 1", str("Bronze - Welcome to the Game - 1" + "\n(" + currentAccountUsername + ")"), icon_path = bronzeIcon, duration=5, threaded=enableAchievementThreading)
             if achievementVersion not in ["v1.0.0"]: medalEarned = "Bronze"
         elif achievementToGain == "Achievement_Welcome2":
-            toaster.show_toast("Bronze - Welcome to the Game - 2", str("Start a new game. - 2" + "\n(" + currentAccountUsername + ")"), icon_path = bronzeIcon, duration=5, threaded=enableAchievementThreading)
+            if win10ToastActive == True: toaster.show_toast("Bronze - Welcome to the Game - 2", str("Start a new game. - 2" + "\n(" + currentAccountUsername + ")"), icon_path = bronzeIcon, duration=5, threaded=enableAchievementThreading)
             if achievementVersion not in ["v1.0.0"]: medalEarned = "Bronze"
         elif achievementToGain == "Achievement_Welcome3":
-            toaster.show_toast("Bronze - Welcome to the Game - 3", str("Start a new game. - 3" + "\n(" + currentAccountUsername + ")"), icon_path = bronzeIcon, duration=5, threaded=enableAchievementThreading)
+            if win10ToastActive == True: toaster.show_toast("Bronze - Welcome to the Game - 3", str("Start a new game. - 3" + "\n(" + currentAccountUsername + ")"), icon_path = bronzeIcon, duration=5, threaded=enableAchievementThreading)
             if achievementVersion not in ["v1.0.0"]: medalEarned = "Bronze"
         elif achievementToGain == "Achievement_Hot_Streak":
-            toaster.show_toast("Silver - You're on Fire!", str("Go on a streak of 5 correct games." + "\n(" + currentAccountUsername + ")"), icon_path = silverIcon, duration=5, threaded=enableAchievementThreading)
+            if win10ToastActive == True: toaster.show_toast("Silver - You're on Fire!", str("Go on a streak of 5 correct games." + "\n(" + currentAccountUsername + ")"), icon_path = silverIcon, duration=5, threaded=enableAchievementThreading)
             if achievementVersion not in ["v1.0.0"]: medalEarned = "Silver"
         elif achievementToGain == "Achievement_All_Animals":
-            toaster.show_toast("Gold - Zoologist", str("Complete all the game topics in the animals category." + "\n(" + currentAccountUsername + ")"), icon_path = goldIcon, duration=5, threaded=enableAchievementThreading)
+            if win10ToastActive == True: toaster.show_toast("Gold - Zoologist", str("Complete all the game topics in the animals category." + "\n(" + currentAccountUsername + ")"), icon_path = goldIcon, duration=5, threaded=enableAchievementThreading)
             if achievementVersion not in ["v1.0.0"]: medalEarned = "Gold"
         elif achievementToGain != "saving": print("GAME ERROR(No Achievement with that name found)")
         if achievementVersion not in ["v1.0.0"] and achievementToGain != "saving":
