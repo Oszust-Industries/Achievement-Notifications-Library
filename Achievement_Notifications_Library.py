@@ -1,6 +1,6 @@
 ## Achievement Notifications Library v1.4.5 - Oszust Industries
 dateInformation = "Created on: 5-15-21 - Last update: 9-22-21"
-libraryVersion = "v1.4.5-Beta(21.9.22.1)"
+libraryVersion = "v1.4.5-Beta(21.9.22.2)"
 newestAchievementVersion = libraryVersion
 from datetime import datetime, date, timedelta
 import os
@@ -633,10 +633,8 @@ def Achievements(achievementToGain):
                     clear()
                 except:
                     clear()
-                    print("Packages failed to install.\n\nDisabling achievements...\n\n\n")
+                    print("Packages failed to install.\n\nDisabling achievement notifications...\n\n\n")
                     win10ToastActive = False
-                    Achievements("setup")
-                    return
             if win10ToastActive == True: toaster = ToastNotifier()
             try: gained_Achievements = pickle.load(open(currentAccountPath + "\\achievementSave.p", "rb"))
             except OSError: Achievements("reset")
