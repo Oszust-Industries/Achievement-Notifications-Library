@@ -1,6 +1,6 @@
 ## Achievement Notifications Library v1.4.5 - Oszust Industries
 dateInformation = "Created on: 5-15-21 - Last update: 9-22-21"
-libraryVersion = "v1.4.5-Beta(21.9.22.2)"
+libraryVersion = "v1.4.5-Beta(21.9.22.3)"
 newestAchievementVersion = libraryVersion
 from datetime import datetime, date, timedelta
 import os
@@ -574,7 +574,7 @@ def Achievements(achievementToGain):
 ## Achievement System
     from pathlib import Path
     from shutil import copy
-    global win10ToastActive, achievementProgressTracker, achievementVersion, achievementsActivated, availableAchievements, bronzeIcon, currentPlaytime, earnedBronze, earnedGold, earnedPlatinum, earnedSilver, gained_Achievements, goldIcon, lastPlaytimeDatePlayed, platinumIcon, playtimeStartTime, resetAchievements, silverIcon, toaster, waitingAchievementsList
+    global achievementProgressTracker, achievementVersion, availableAchievements, bronzeIcon, currentPlaytime, earnedBronze, earnedGold, earnedPlatinum, earnedSilver, gained_Achievements, goldIcon, lastPlaytimeDatePlayed, platinumIcon, playtimeStartTime, resetAchievements, silverIcon, toaster, waitingAchievementsList, win10ToastActive
     availableAchievements = 5
     defaultAchievementProgressTracker = [0, 10, 0, 5]
     if False and deactivateFileOpening == False: copy(str(Path(__file__).resolve().parent) + "\\Achievements.json", currentAccountPath)
