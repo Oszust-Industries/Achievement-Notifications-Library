@@ -1,6 +1,6 @@
 ## Achievement Notifications Library v1.4.5 - Oszust Industries
-dateInformation = "Created on: 5-15-21 - Last update: 9-22-21"
-libraryVersion = "v1.4.5-Beta(21.9.22.3)"
+dateInformation = "Created on: 5-15-21 - Last update: 9-23-21"
+libraryVersion = "v1.4.5-Beta(21.9.23.1)"
 newestAchievementVersion = libraryVersion
 from datetime import datetime, date, timedelta
 import os
@@ -574,7 +574,7 @@ def Achievements(achievementToGain):
 ## Achievement System
     from pathlib import Path
     from shutil import copy
-    global achievementProgressTracker, achievementVersion, availableAchievements, bronzeIcon, currentPlaytime, earnedBronze, earnedGold, earnedPlatinum, earnedSilver, gained_Achievements, goldIcon, lastPlaytimeDatePlayed, platinumIcon, playtimeStartTime, resetAchievements, silverIcon, toaster, waitingAchievementsList, win10ToastActive
+    global achievementIconLocation, achievementProgressTracker, achievementVersion, availableAchievements, currentPlaytime, earnedBronze, earnedGold, earnedPlatinum, earnedSilver, gained_Achievements, lastPlaytimeDatePlayed, playtimeStartTime, resetAchievements, toaster, waitingAchievementsList, win10ToastActive
     availableAchievements = 5
     defaultAchievementProgressTracker = [0, 10, 0, 5]
     if False and deactivateFileOpening == False: copy(str(Path(__file__).resolve().parent) + "\\Achievements.json", currentAccountPath)
@@ -597,11 +597,7 @@ def Achievements(achievementToGain):
         return
 ## Setup System
     elif achievementToGain == "setup":
-        if deactivateFileOpening == False:
-            bronzeIcon = str(Path(__file__).resolve().parent) + "\Achievement Icons\Bronze-trophy.ico"
-            silverIcon = str(Path(__file__).resolve().parent) + "\Achievement Icons\Silver-trophy.ico"
-            goldIcon = str(Path(__file__).resolve().parent) + "\Achievement Icons\Gold-trophy.ico"
-            platinumIcon = str(Path(__file__).resolve().parent) + "\Achievement Icons\Hangman-Platinum-trophy.ico"
+        achievementIconLocation = str(Path(__file__).resolve().parent)
         if enableAchievementThreading == True:
             import threading
             backroundAchievementThread = threading.Thread(name='waitingAchievements', target=waitingAchievements)
@@ -678,22 +674,22 @@ def Achievements(achievementToGain):
         return
     if deactivateFileOpening == False and achievementsActivated == True and achievementToGain not in ["reset", "setup", "ready"] and "Progress" not in achievementToGain and achievementToGain not in gained_Achievements:
         if achievementToGain == "Achievement_DEBUG":
-            if win10ToastActive == True: toaster.show_toast("Trophy Level - Achievement Title", str("Achievement Description." + "\n(" + currentAccountUsername + ")"), icon_path = bronzeIcon, duration=5, threaded=enableAchievementThreading)
+            if win10ToastActive == True: toaster.show_toast("Trophy Level - Achievement Title", str("Achievement Description." + "\n(" + currentAccountUsername + ")"), icon_path = achievementIconLocation + "\Achievement Icons\Bronze-trophy.ico", duration=5, threaded=enableAchievementThreading)
             if achievementVersion not in ["v1.0.0"]: medalEarned = "Bronze"
         elif achievementToGain == "Achievement_Welcome":
-            if win10ToastActive == True: toaster.show_toast("Start a new game. - 1", str("Bronze - Welcome to the Game - 1" + "\n(" + currentAccountUsername + ")"), icon_path = bronzeIcon, duration=5, threaded=enableAchievementThreading)
+            if win10ToastActive == True: toaster.show_toast("Start a new game. - 1", str("Bronze - Welcome to the Game - 1" + "\n(" + currentAccountUsername + ")"), icon_path = achievementIconLocation + "\Achievement Icons\Bronze-trophy.ico", duration=5, threaded=enableAchievementThreading)
             if achievementVersion not in ["v1.0.0"]: medalEarned = "Bronze"
         elif achievementToGain == "Achievement_Welcome2":
-            if win10ToastActive == True: toaster.show_toast("Bronze - Welcome to the Game - 2", str("Start a new game. - 2" + "\n(" + currentAccountUsername + ")"), icon_path = bronzeIcon, duration=5, threaded=enableAchievementThreading)
+            if win10ToastActive == True: toaster.show_toast("Bronze - Welcome to the Game - 2", str("Start a new game. - 2" + "\n(" + currentAccountUsername + ")"), icon_path = achievementIconLocation + "\Achievement Icons\Bronze-trophy.ico", duration=5, threaded=enableAchievementThreading)
             if achievementVersion not in ["v1.0.0"]: medalEarned = "Bronze"
         elif achievementToGain == "Achievement_Welcome3":
-            if win10ToastActive == True: toaster.show_toast("Bronze - Welcome to the Game - 3", str("Start a new game. - 3" + "\n(" + currentAccountUsername + ")"), icon_path = bronzeIcon, duration=5, threaded=enableAchievementThreading)
+            if win10ToastActive == True: toaster.show_toast("Bronze - Welcome to the Game - 3", str("Start a new game. - 3" + "\n(" + currentAccountUsername + ")"), icon_path = achievementIconLocation + "\Achievement Icons\Bronze-trophy.ico", duration=5, threaded=enableAchievementThreading)
             if achievementVersion not in ["v1.0.0"]: medalEarned = "Bronze"
         elif achievementToGain == "Achievement_Hot_Streak":
-            if win10ToastActive == True: toaster.show_toast("Silver - You're on Fire!", str("Go on a streak of 5 correct games." + "\n(" + currentAccountUsername + ")"), icon_path = silverIcon, duration=5, threaded=enableAchievementThreading)
+            if win10ToastActive == True: toaster.show_toast("Silver - You're on Fire!", str("Go on a streak of 5 correct games." + "\n(" + currentAccountUsername + ")"), icon_path = achievementIconLocation + "\Achievement Icons\Silver-trophy.ico", duration=5, threaded=enableAchievementThreading)
             if achievementVersion not in ["v1.0.0"]: medalEarned = "Silver"
         elif achievementToGain == "Achievement_All_Animals":
-            if win10ToastActive == True: toaster.show_toast("Gold - Zoologist", str("Complete all the game topics in the animals category." + "\n(" + currentAccountUsername + ")"), icon_path = goldIcon, duration=5, threaded=enableAchievementThreading)
+            if win10ToastActive == True: toaster.show_toast("Gold - Zoologist", str("Complete all the game topics in the animals category." + "\n(" + currentAccountUsername + ")"), icon_path = achievementIconLocation + "\Achievement Icons\Gold-trophy.ico", duration=5, threaded=enableAchievementThreading)
             if achievementVersion not in ["v1.0.0"]: medalEarned = "Gold"
         elif achievementToGain != "saving": print("GAME ERROR(No Achievement with that name found)")
         if achievementVersion not in ["v1.0.0"] and achievementToGain != "saving":
@@ -718,10 +714,10 @@ def Achievements(achievementToGain):
         else: animalsCategory = int(defaultAchievementProgressTracker[0])
         if len(achievementProgressTracker) >= 2: maxAnimalsCategory = int(achievementProgressTracker[1])
         else: maxAnimalsCategory = int(defaultAchievementProgressTracker[1])
-        if len(achievementProgressTracker) >= 11: winningStreak = int(achievementProgressTracker[10])
-        else: winningStreak = int(defaultAchievementProgressTracker[10])
-        if len(achievementProgressTracker) >= 12: maxWinningStreak = int(achievementProgressTracker[11])
-        else: maxWinningStreak = int(defaultAchievementProgressTracker[11])
+        if len(achievementProgressTracker) >= 3: winningStreak = int(achievementProgressTracker[2])
+        else: winningStreak = int(defaultAchievementProgressTracker[2])
+        if len(achievementProgressTracker) >= 4: maxWinningStreak = int(achievementProgressTracker[3])
+        else: maxWinningStreak = int(defaultAchievementProgressTracker[3])
         if achievementToGain == "Animals": animalsCategory += 1
         if "Achievement_All_Animals" not in gained_Achievements and (animalsCategory >= maxAnimalsCategory): Achievements("Achievement_All_Animals")
 ## Streak Counter
@@ -747,7 +743,7 @@ def testAchievements():
     elif userAnswer.lower() == "welcome3":
         print("Rewarding achievement = Achievement_Welcome3")
         Achievements("Achievement_Welcome3")
-    elif userAnswer.lower() == "hot streak":
+    elif userAnswer.lower() == "hotstreak":
         print("Rewarding achievement = Achievement_Hot_Streak")
         Achievements("Achievement_Hot_Streak")
     elif userAnswer.lower() == "animal":
