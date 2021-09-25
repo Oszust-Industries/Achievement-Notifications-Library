@@ -5,6 +5,7 @@ Achievement Notifications Library has an account system and an Achievement syste
 Release Date: May 15, 2021
 
 Developer: [Oszust Industries](https://github.com/Oszust-Industries)
+<br /> [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/bukotsunikki.svg?style=social&label=Follow%20%40OszustOS)](https://twitter.com/OszustOS)
 
 <br /> Developer Library
 
