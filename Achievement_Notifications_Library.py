@@ -1,6 +1,6 @@
 ## Achievement Notifications Library v1.5.0 - Oszust Industries
 dateInformation = "Created on: 5-15-21 - Last update: 10-13-21"
-libraryVersion = "v1.5.0-Beta(21.10.13.1)"
+libraryVersion = "v1.5.0-Beta(21.10.13.2)"
 newestAchievementVersion = libraryVersion
 def clear(): return ("\n" * 70)
 from datetime import date, datetime, timedelta
@@ -25,7 +25,7 @@ def libraryConfig():
 
 def librarySetup():
 ## Setup Software
-    global accountReady
+    global accountReady, restartNeed
     print("Loading...")
     accountReady = False
 ## Start Functions
