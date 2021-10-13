@@ -23,7 +23,7 @@ def update(appBuild):
                 os.mkdir(appdata + "\\temp")
             if appBuild == "Main": urllib.request.urlretrieve("https://github.com/Oszust-Industries/Achievement-Notifications-Library/archive/refs/heads/main.zip", str(os.getenv('APPDATA') + "\\Oszust Industries\\temp\\Achievement-Notifications-Library.zip"))
             elif appBuild == "Beta": urllib.request.urlretrieve("https://github.com/Oszust-Industries/Achievement-Notifications-Library/archive/refs/heads/Beta.zip", str(os.getenv('APPDATA') + "\\Oszust Industries\\temp\\Achievement-Notifications-Library.zip"))
-            else: return
+            else: return False
             with zipfile.ZipFile(appdata + "\\temp\\Achievement-Notifications-Library.zip", 'r') as zip_ref: zip_ref.extractall(appdata + "\\temp")
             os.remove(appdata + "\\temp\\Achievement-Notifications-Library.zip")
             if appBuild == "Beta": os.rename(appdata + "\\temp\\Achievement-Notifications-Library-Beta", appdata + "\\temp\\Achievement-Notifications-Library-Main")
