@@ -20,10 +20,10 @@ def update(appBuild):
             os.remove(current + "\\Achievement-Notifications-Library.zip")
             if appBuild == "Beta": os.rename(current + "\\Achievement-Notifications-Library-Beta", current + "\\Achievement-Notifications-Library-main")
             ## Files to Update
-            if os.path.getsize(current + "\\Achievement_Notifications_Library2.py") != os.path.getsize(current + "\\Achievement-Notifications-Library-main\\Achievement_Notifications_Library.py"): restartNeed = True
-            try: os.remove(current + "\\Achievement_Notifications_Library2.py")
+            if os.path.getsize(current + "\\Achievement_Notifications_Library.py") != os.path.getsize(current + "\\Achievement-Notifications-Library-main\\Achievement_Notifications_Library.py"): restartNeed = True
+            try: os.remove(current + "\\Achievement_Notifications_Library.py")
             except: pass
-            shutil.move(current + "\\Achievement-Notifications-Library-main\\Achievement_Notifications_Library2.py", current)
+            shutil.move(current + "\\Achievement-Notifications-Library-main\\Achievement_Notifications_Library.py", current)
             try: shutil.rmtree(current + "\\Achievement Icons")
             except: pass
             shutil.move(current + "\\Achievement-Notifications-Library-main\\Achievement Icons", current)
