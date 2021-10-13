@@ -29,7 +29,7 @@ def update(appBuild):
             if appBuild == "Beta": os.rename(appdata + "\\temp\\Achievement-Notifications-Library-Beta", appdata + "\\temp\\Achievement-Notifications-Library-Main")
             ## Files to Update
             if os.path.getsize(current + "\\Achievement_Notifications_Library.py") != os.path.getsize(appdata + "\\temp\\Achievement-Notifications-Library-Main\\Achievement_Notifications_Library.py"): restartNeed = True
-            else: restartNeed == False
+            else: restartNeed = False
             try: os.remove(current + "\\Achievement_Notifications_Library.py")
             except: pass
             shutil.move(appdata + "\\temp\\Achievement-Notifications-Library-Main\\Achievement_Notifications_Library.py", current)
