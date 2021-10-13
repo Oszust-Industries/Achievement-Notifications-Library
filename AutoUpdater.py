@@ -8,7 +8,6 @@ import urllib.request
 import zipfile
 
 def update(appBuild):
-    global restartNeed
     try:
         try: lastUpdateDate = pickle.load(open(str(Path(__file__).resolve().parent) + "\\lastUpdateDate.p", "rb"))
         except: lastUpdateDate = datetime(2018, 1, 1, 1, 1, 1, 0)
