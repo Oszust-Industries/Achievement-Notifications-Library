@@ -20,7 +20,7 @@ def update(appBuild):
             if path.exists(appdata + "\\temp") == False: os.mkdir(appdata + "\\temp")
             else:
                 shutil.rmtree(appdata + "\\temp")
-                os.mkdir(appdata + "\\Oszust Industries\\temp")
+                os.mkdir(appdata + "\\temp")
             if appBuild == "Main": urllib.request.urlretrieve("https://github.com/Oszust-Industries/Achievement-Notifications-Library/archive/refs/heads/main.zip", str(os.getenv('APPDATA') + "\\Oszust Industries\\temp\\Achievement-Notifications-Library.zip"))
             elif appBuild == "Beta": urllib.request.urlretrieve("https://github.com/Oszust-Industries/Achievement-Notifications-Library/archive/refs/heads/Beta.zip", str(os.getenv('APPDATA') + "\\Oszust Industries\\temp\\Achievement-Notifications-Library.zip"))
             else: return
