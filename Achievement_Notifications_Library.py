@@ -31,10 +31,8 @@ def librarySetup():
 ## Start Functions
     libraryConfig()
     if autoUpdate == True and deactivateFileOpening == False and os.name == "nt" and appBuild != "Dev":
-        if AutoUpdater.update(appBuild) == True: restartNeed = True
-        else: restartNeed = False
-    else: restartNeed = False
-    if restartNeed == True: print(clear() + "(Restart app to install update.)\n\nAchievement Notifications Library " + libraryVersion + " - Oszust Industries\n" + dateInformation + "\nLibrary Version: " + libraryVersion + "\n\n\nOszust Industries Login System:\n\n")
+        if AutoUpdater.update(appBuild) == True: print(clear() + "(Restart app to install update.)\n\nAchievement Notifications Library " + libraryVersion + " - Oszust Industries\n" + dateInformation + "\nLibrary Version: " + libraryVersion + "\n\n\nOszust Industries Login System:\n\n")
+        else: print(clear() + "Achievement Notifications Library " + libraryVersion + " - Oszust Industries\n" + dateInformation + "\nLibrary Version: " + libraryVersion + "\n\n\nOszust Industries Login System:\n\n")
     else: print(clear() + "Achievement Notifications Library " + libraryVersion + " - Oszust Industries\n" + dateInformation + "\nLibrary Version: " + libraryVersion + "\n\n\nOszust Industries Login System:\n\n")
     accountLogin("setup")
     accountReady = True
