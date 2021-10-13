@@ -16,11 +16,11 @@ def update(appBuild):
             current = str(Path(__file__).resolve().parent)
             appdata = os.getenv('APPDATA') + "\\Oszust Industries"
             ## Download Update
-            if path.exists(appdata + "\\Oszust Industries")) == False: os.mkdir(appdata + "\\Oszust Industries"))
-            if path.exists(appdata + "\\Oszust Industries\\temp")) == False: os.mkdir(appdata + "\\Oszust Industries\\temp"))
+            if path.exists(appdata) == False: os.mkdir(appdata)
+            if path.exists(appdata + "\\temp") == False: os.mkdir(appdata + "\\temp")
             else:
                 shutil.rmtree(appdata + "\\temp")
-                os.mkdir(appdata + "\\temp"))
+                os.mkdir(appdata + "\\Oszust Industries\\temp")
             if appBuild == "Main": urllib.request.urlretrieve("https://github.com/Oszust-Industries/Achievement-Notifications-Library/archive/refs/heads/main.zip", str(os.getenv('APPDATA') + "\\Oszust Industries\\temp\\Achievement-Notifications-Library.zip"))
             elif appBuild == "Beta": urllib.request.urlretrieve("https://github.com/Oszust-Industries/Achievement-Notifications-Library/archive/refs/heads/Beta.zip", str(os.getenv('APPDATA') + "\\Oszust Industries\\temp\\Achievement-Notifications-Library.zip"))
             else: return
