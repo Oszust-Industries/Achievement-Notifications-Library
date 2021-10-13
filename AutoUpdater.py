@@ -16,6 +16,7 @@ def update(appBuild):
             ## Download Update
             if appBuild == "Main": urllib.request.urlretrieve("https://github.com/Oszust-Industries/Achievement-Notifications-Library/archive/refs/heads/main.zip", "Achievement-Notifications-Library.zip")
             elif appBuild == "Beta": urllib.request.urlretrieve("https://github.com/Oszust-Industries/Achievement-Notifications-Library/archive/refs/heads/Beta.zip", "Achievement-Notifications-Library.zip")
+            else: return
             with zipfile.ZipFile(r"./Achievement-Notifications-Library.zip", 'r') as zip_ref: zip_ref.extractall("")
             os.remove(current + "\\Achievement-Notifications-Library.zip")
             if appBuild == "Beta": os.rename(current + "\\Achievement-Notifications-Library-Beta", current + "\\Achievement-Notifications-Library-main")
