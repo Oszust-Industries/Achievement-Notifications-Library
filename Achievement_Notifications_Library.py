@@ -1,6 +1,6 @@
 ## Achievement Notifications Library v1.5.0 - Oszust Industries
-dateInformation = "Created on: 5-15-21 - Last update: 10-13-21"
-libraryVersion = "v1.5.0-Beta(21.10.14.1)"
+dateInformation = "Created on: 5-15-21 - Last update: 10-14-21"
+libraryVersion = "v1.5.0-Beta(21.10.14.2)"
 newestAchievementVersion = libraryVersion
 def clear(): return ("\n" * 70)
 from datetime import date, datetime, timedelta
@@ -14,7 +14,7 @@ def libraryConfig():
     global appBuild, autoUpdate, deactivateFileOpening, enableAccountSystem, enableAchievementThreading, exitSystem, overrideResetAchivements, resetSettings, systemName
     systemName, exitSystem = "Achievement Notifications Library", False
 ## Change Configures
-    appBuild = "Beta"                 ## The build the app is running (Beta, Main)
+    appBuild = "Dev"                 ## The build the app is running (Beta, Main)
     resetSettings = False             ## Reset account's settings on login
     overrideResetAchivements = False  ## Reset account's achievements on login
     enableAchievementThreading = True ## Enables achievements to be ran in separate thread
@@ -91,26 +91,25 @@ def accountLogin(accountAction):
         if len(tempAvailableAccounts) > 0: print(str(len(tempAvailableAccounts) + 3) + ". Remove account\n" + str(len(tempAvailableAccounts) + 4) + ". Quit")
         else: print(str(len(tempAvailableAccounts) + 3) + ". Quit")
         accountInput = input("\nType the account number to login. ").replace(" ", "")
-        if accountInput.isnumeric() or accountInput in availableAccounts:
+        if accountInput.lower() in ["create", "add"] or (accountInput.isnumeric() and int(accountInput) == len(tempAvailableAccounts) + 1):
+            print(clear())
+            startedCreateAccount = False
+            accountLogin("createAccount_1")
+        elif accountInput.lower() in ["guest"] or (accountInput.isnumeric() and int(accountInput) == len(tempAvailableAccounts) + 2):
+            print("\n\nLoading Account...")
+            deactivateFileOpening, win10ToastActive, currentAccountUsername = True, False, "Guest"
+            accountLogin("readOwnedDLC")
+            print(clear())
+        elif accountInput.lower() in ["delete", "remove"] or (accountInput.isnumeric() and int(accountInput) == len(tempAvailableAccounts) + 3 and len(tempAvailableAccounts) > 0):
+            print(clear())
+            accountLogin("deleteAccount")
+        elif accountInput.isnumeric() or accountInput in availableAccounts:
             if accountInput.isdigit() == False:
                 currentAccountUsername = accountInput
                 currentAccountInfoPath = str(os.getenv('APPDATA') + "\\Oszust Industries\\Accounts\\" + currentAccountUsername)
                 currentAccountPath = (currentAccountInfoPath + "\\" + systemName), (currentAccountInfoPath + "\\" + systemName)
                 accountLogin("readSettings")
-            elif int(accountInput) == len(tempAvailableAccounts) + 1:
-                print(clear())
-                startedCreateAccount = False
-                accountLogin("createAccount_1")
-            elif int(accountInput) == len(tempAvailableAccounts) + 2:
-                print("\n\nLoading Account...")
-                deactivateFileOpening, win10ToastActive, currentAccountUsername = True, False, "Guest"
-                accountLogin("readOwnedDLC")
-                print(clear())
-            elif int(accountInput) == len(tempAvailableAccounts) + 3 and len(tempAvailableAccounts) > 0:
-                print(clear())
-                accountLogin("deleteAccount")
-            elif int(accountInput) == len(tempAvailableAccounts) + 3 and len(tempAvailableAccounts) <= 0: accountLogin("quit")
-            elif int(accountInput) == len(tempAvailableAccounts) + 4 and len(tempAvailableAccounts) > 0: accountLogin("quit")
+            elif (int(accountInput) == len(tempAvailableAccounts) + 3 and len(tempAvailableAccounts) <= 0) or (int(accountInput) == len(tempAvailableAccounts) + 4 and len(tempAvailableAccounts) > 0): accountLogin("quit")
             elif (int(accountInput) < len(tempAvailableAccounts) + 1 and int(accountInput) > 0):
                 currentAccountUsername = availableAccounts[int(accountInput) - 1]
                 currentAccountInfoPath = str(os.getenv('APPDATA') + "\\Oszust Industries\\Accounts\\" + currentAccountUsername)
@@ -119,9 +118,6 @@ def accountLogin(accountAction):
             else:
                 print(clear() + "You typed an unavailable account number.\n\n\n")
                 accountLogin("setup")
-        elif accountInput in ["delete", "remove"]:
-            print(clear())
-            accountLogin("deleteAccount")
         elif accountInput in ["quit", "exit"]: accountLogin("quit")
         else:
             print(clear() + "You typed an unavailable account number.\n\n\n")
