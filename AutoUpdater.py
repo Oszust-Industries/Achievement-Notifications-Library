@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from pathlib import Path
 from os import path
 import os
@@ -21,8 +21,8 @@ def update(appBuild):
             else:
                 shutil.rmtree(appdata + "\\temp")
                 os.mkdir(appdata + "\\temp")
-            if appBuild == "Main": urllib.request.urlretrieve("https://github.com/Oszust-Industries/Achievement-Notifications-Library/archive/refs/heads/main.zip", str(os.getenv('APPDATA') + "\\Oszust Industries\\temp\\Achievement-Notifications-Library.zip"))
-            elif appBuild == "Beta": urllib.request.urlretrieve("https://github.com/Oszust-Industries/Achievement-Notifications-Library/archive/refs/heads/Beta.zip", str(os.getenv('APPDATA') + "\\Oszust Industries\\temp\\Achievement-Notifications-Library.zip"))
+            if appBuild.lower() == "main": urllib.request.urlretrieve("https://github.com/Oszust-Industries/Achievement-Notifications-Library/archive/refs/heads/main.zip", str(os.getenv('APPDATA') + "\\Oszust Industries\\temp\\Achievement-Notifications-Library.zip"))
+            elif appBuild.lower() == "beta": urllib.request.urlretrieve("https://github.com/Oszust-Industries/Achievement-Notifications-Library/archive/refs/heads/Beta.zip", str(os.getenv('APPDATA') + "\\Oszust Industries\\temp\\Achievement-Notifications-Library.zip"))
             else: return False
             with zipfile.ZipFile(appdata + "\\temp\\Achievement-Notifications-Library.zip", 'r') as zip_ref: zip_ref.extractall(appdata + "\\temp")
             os.remove(appdata + "\\temp\\Achievement-Notifications-Library.zip")
