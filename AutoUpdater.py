@@ -44,4 +44,4 @@ def update(appBuild):
             pickle.dump(datetime.utcnow(), open(current + "\\lastUpdateDate.p", "wb"))
             if restartNeed == True: return True
             else: return False
-    except: print("Update Failed.")
+    except Exception as Argument: print("Update Failed. (" + Argument + ")")
