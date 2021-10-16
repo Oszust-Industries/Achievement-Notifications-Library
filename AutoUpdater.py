@@ -1,3 +1,5 @@
+## Achievement Notifications Library v1.5.0 - Oszust Industries
+## Achievement Notifications Library - AutoUpdater
 from datetime import datetime
 from pathlib import Path
 from os import path
