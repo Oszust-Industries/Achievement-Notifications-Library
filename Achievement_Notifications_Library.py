@@ -1,38 +1,57 @@
-## Achievement Notifications Library v1.4.5 - Oszust Industries
-dateInformation = "Created on: 5-15-21 - Last update: 9-30-21"
-libraryVersion = "v1.4.5"
+## Achievement Notifications Library v1.5.0 - Oszust Industries
+dateInformation = "Created on: 5-15-21 - Last update: 10-16-21"
+libraryVersion = "v1.5.0"
 newestAchievementVersion = libraryVersion
+def clear(): return ("\n" * 70)
 from datetime import date, datetime, timedelta
+import AutoUpdater
 import os
 import pickle
 import time
 
 def libraryConfig():
 ## System Configures
-    global deactivateFileOpening, enableAccountSystem, enableAchievementThreading, exitSystem, overrideResetAchivements, resetSettings, systemName
-    systemName = "Achievement Notifications Library"
-    exitSystem = False
+    global appBuild, autoUpdate, deactivateFileOpening, enableAccountSystem, enableAchievementThreading, exitSystem, overrideResetAchivements, resetSettings, systemName
+    systemName, exitSystem = "Achievement Notifications Library", False
 ## Change Configures
-    resetSettings = False
-    ## V|WARNING|: No Playtime/Achievements Saved
-    overrideResetAchivements = False
-    enableAchievementThreading = True
-    deactivateFileOpening = False
-    enableAccountSystem = True
+    appBuild = "Main"                 ## The build the app is running (Beta, Main)
+    resetSettings = False             ## Reset account's settings on login
+    overrideResetAchivements = False  ## Reset account's achievements on login
+    enableAchievementThreading = True ## Enables achievements to be ran in separate thread
+    deactivateFileOpening = False     ## Stops the program from reading/writing on files on PC
+    enableAccountSystem = True        ## Enables the account system allowing multiple accounts
+    autoUpdate = True                 ## The program will check for an update every day
+    pass
 
 def librarySetup():
 ## Setup Software
-    global accountReady
-    clear()
+    global accountReady, restartNeed
+    print("Loading...")
     accountReady = False
-    print("Achievement Notifications Library " + libraryVersion + " - Oszust Industries"
-            "\n" + dateInformation + "\nLibrary Version: " + libraryVersion + "\n\n")
-    print("Oszust Industries Login System:\n\n")
+## Start Functions
     libraryConfig()
+    if autoUpdate == True and deactivateFileOpening == False and os.name == "nt" and appBuild != "Dev":
+        if AutoUpdater.update(appBuild) == True: print(clear() + "(Restart app to install update.)\n\nAchievement Notifications Library " + libraryVersion + " - Oszust Industries\n" + dateInformation + "\nLibrary Version: " + libraryVersion + "\n\n\nOszust Industries Login System:\n\n")
+        else: print(clear() + "Achievement Notifications Library " + libraryVersion + " - Oszust Industries\n" + dateInformation + "\nLibrary Version: " + libraryVersion + "\n\n\nOszust Industries Login System:\n\n")
+    else: print(clear() + "Achievement Notifications Library " + libraryVersion + " - Oszust Industries\n" + dateInformation + "\nLibrary Version: " + libraryVersion + "\n\n\nOszust Industries Login System:\n\n")
     accountLogin("setup")
+    accountReady = True
     if exitSystem == False:
+        print("Loading...")
         Achievements("setup")
         testAchievements()
+
+def crashMessage():
+## Display Crash
+    global Argument
+    import webbrowser
+    webbrowser.open("https://github.com/Oszust-Industries/" + systemName.replace(" ", "-"),  new = 2, autoraise = True)
+    print(clear() + "Crash Log:\n" + ("-" * 50 + "\n") + str(Argument) + ("\n" + "-" * 50) + "\n")
+    crash = input(systemName + " has crashed. Please report your crash to the issues tab in GitHub.\n\nPress enter to restart " + systemName + "...\n")
+    if crash not in ["exit()", "exit", "quit"]:
+        try: librarySetup()
+        except Exception as Argument: crashMessage()
+    else: exit()
 
 def accountLogin(accountAction):
 ## Save User Settings
@@ -40,125 +59,107 @@ def accountLogin(accountAction):
     import math
     import shutil
     global account2Way, accountActiveOwnedDLC, accountEmail, accountInput, accountLanguage, accountOwnedDLC, accountPassword, availableAccounts, availablePossibleAnswers, currentAccountInfoPath, currentAccountPath, currentAccountUsername, deactivateFileOpening, emailCode, emailExpireTime, emailconfirmed, enableAccountSystem, exitSystem, expiredCodes, gameHintsActivated, lockDateTime, packedAccountGames, packedAccountInformation, packedSettings, passwordAttemptsLeft, punishmentMode, resetAchievements, smartWordDetector, startedCreateAccount, tempAvailableAccounts, win10ToastActive
-    weakPasswords = ["1234", "password", "forgot password", "forgotpassword", "default", "incorrect", "back", "quit", "return", "logout"]
-    badUsernames = ["disneyhockey40", "guest", "default", ""]
+    weakPasswords, badUsernames = ["1234", "password", "forgot password", "forgotpassword", "default", "incorrect", "back", "quit", "return", "logout"], ["disneyhockey40", "guest", "password", "forgot password", "forgotpassword", "default", "incorrect", "logout", ""]
 ## Account Setup
     if accountAction == "setup":
-        lockDateTime = ""
-        expiredCodes = []
-        emailconfirmed = False
-        passwordAttemptsLeft = 5
-        currentAccountUsername = ""
-## Windows Detector
-        if os.name != "nt": deactivateFileOpening = True
+        lockDateTime, expiredCodes, emailconfirmed, passwordAttemptsLeft, currentAccountUsername = "", [], False, 5, ""
+        if os.name != "nt": deactivateFileOpening = True ## Windows Detector
         accountLogin("createUserPath")
         if deactivateFileOpening == False:
             try:
                 availableAccounts = pickle.load(open(str(os.getenv('APPDATA') + "\\Oszust Industries\\Available Account.p"), "rb"))
                 availableAccounts.sort()
             except OSError: availableAccounts = []
-        else:
-            availableAccounts = []
-            enableAccountSystem = False
+        else: availableAccounts, enableAccountSystem = [], False
         if enableAccountSystem == False:
             currentAccountUsername = "Default"
-            if deactivateFileOpening == False:
+            if deactivateFileOpening == False: 
                 currentAccountInfoPath = str(os.getenv('APPDATA') + "\\Oszust Industries\\Accounts\\" + currentAccountUsername)
                 currentAccountPath = (currentAccountInfoPath + "\\" + systemName)
-            else:
-                currentAccountInfoPath = ""
-                currentAccountPath = ""
+            else: currentAccountInfoPath, currentAccountPath = "", ""
             try: packedAccountGames = pickle.load(open(currentAccountInfoPath + "\\accountGames.p", "rb"))
             except OSError: accountLogin("createUserPath")
             accountLogin("readSettings")
             return
-        tempAvailableAccounts = availableAccounts
-        if "Default" in availableAccounts:
-            tempAvailableAccounts = tempAvailableAccounts.remove("Default")
-            if len(availableAccounts) <= 1: tempAvailableAccounts = []
+        if "Default" in availableAccounts: tempAvailableAccounts = availableAccounts.remove("Default")
+        else: tempAvailableAccounts = availableAccounts
         if len(tempAvailableAccounts) > 0:
             print("Available Accounts:")
-            for i in tempAvailableAccounts:
-                if i != "Default": print(str(tempAvailableAccounts.index(i) + 1) + ". " + i)
-        else: print("No Available Accounts:")
-        print("\n" + str(len(tempAvailableAccounts) + 1) + ". Add account")
-        print(str(len(tempAvailableAccounts) + 2) + ". Login as guest")
-        if len(tempAvailableAccounts) > 0: print(str(len(tempAvailableAccounts) + 3) + ". Remove account")
-        if len(tempAvailableAccounts) > 0: print(str(len(tempAvailableAccounts) + 4) + ". Quit")
+            for i in tempAvailableAccounts: print(str(tempAvailableAccounts.index(i) + 1) + ". " + i)
+        else: print("No Available Accounts.")
+        print("\n" + str(len(tempAvailableAccounts) + 1) + ". Add account\n" + str(len(tempAvailableAccounts) + 2) + ". Login as guest")
+        if len(tempAvailableAccounts) > 0: print(str(len(tempAvailableAccounts) + 3) + ". Remove account\n" + str(len(tempAvailableAccounts) + 4) + ". Quit")
         else: print(str(len(tempAvailableAccounts) + 3) + ". Quit")
         accountInput = input("\nType the account number to login. ").replace(" ", "")
-        if accountInput.isnumeric() or accountInput in availableAccounts:
-            if int(accountInput) == len(tempAvailableAccounts) + 1:
-                clear()
-                startedCreateAccount = False
-                accountLogin("createAccount_1")
-            elif int(accountInput) == len(tempAvailableAccounts) + 2:
-                print("\n\nLoading Account...")
-                deactivateFileOpening = True
-                win10ToastActive = False
-                currentAccountUsername = "Guest"
-                accountLogin("readOwnedDLC")
-                clear()
-            elif int(accountInput) == len(tempAvailableAccounts) + 3 and len(tempAvailableAccounts) > 0:
-                clear()
-                accountLogin("deleteAccount")
-            elif int(accountInput) == len(tempAvailableAccounts) + 3 and len(tempAvailableAccounts) <= 0:
-                    accountLogin("quit")
-            elif int(accountInput) == len(tempAvailableAccounts) + 4 and len(tempAvailableAccounts) > 0:
-                    accountLogin("quit")
-            elif (int(accountInput) < len(tempAvailableAccounts) + 1 and int(accountInput) > 0) or accountInput in availableAccounts:
-                if accountInput.isnumeric(): currentAccountUsername = availableAccounts[int(accountInput) - 1]
-                else: currentAccountUsername = accountInput
+        if accountInput.lower() in ["create", "add"] or (accountInput.isnumeric() and int(accountInput) == len(tempAvailableAccounts) + 1):
+            print(clear())
+            startedCreateAccount = False
+            accountLogin("createAccount_1")
+        elif accountInput.lower() in ["guest"] or (accountInput.isnumeric() and int(accountInput) == len(tempAvailableAccounts) + 2):
+            print("\n\nLoading Account...")
+            deactivateFileOpening, win10ToastActive, currentAccountUsername = True, False, "Guest"
+            accountLogin("readOwnedDLC")
+            print(clear())
+        elif accountInput.lower() in ["delete", "remove"] or (accountInput.isnumeric() and int(accountInput) == len(tempAvailableAccounts) + 3 and len(tempAvailableAccounts) > 0):
+            print(clear())
+            accountLogin("deleteAccount")
+        elif accountInput.isnumeric() or accountInput in availableAccounts:
+            if accountInput.isdigit() == False:
+                currentAccountUsername = accountInput
+                currentAccountInfoPath = str(os.getenv('APPDATA') + "\\Oszust Industries\\Accounts\\" + currentAccountUsername)
+                currentAccountPath = (currentAccountInfoPath + "\\" + systemName), (currentAccountInfoPath + "\\" + systemName)
+                accountLogin("readSettings")
+            elif (int(accountInput) == len(tempAvailableAccounts) + 3 and len(tempAvailableAccounts) <= 0) or (int(accountInput) == len(tempAvailableAccounts) + 4 and len(tempAvailableAccounts) > 0): accountLogin("quit")
+            elif (int(accountInput) < len(tempAvailableAccounts) + 1 and int(accountInput) > 0):
+                currentAccountUsername = availableAccounts[int(accountInput) - 1]
                 currentAccountInfoPath = str(os.getenv('APPDATA') + "\\Oszust Industries\\Accounts\\" + currentAccountUsername)
                 currentAccountPath = (currentAccountInfoPath + "\\" + systemName)
                 accountLogin("readSettings")
             else:
-                clear()
-                print("You typed an unavailable account number.\n\n\n")
+                print(clear() + "You typed an unavailable account number.\n\n\n")
                 accountLogin("setup")
+        elif accountInput in ["quit", "exit"]: accountLogin("quit")
         else:
-            clear()
-            print("You typed an unavailable account number.\n\n\n")
+            print(clear() + "You typed an unavailable account number.\n\n\n")
             accountLogin("setup")
+        return
 ## Account Logout
     elif accountAction == "logout":
         if exitSystem == False:
             exitSystem = True
             print("\n\n\nDo not close application.\nSaving and logging out...\n")
-        if currentAccountUsername != "":
+        if accountReady == True:
             Achievements("saving")
             if len(waitingAchievementsList) <= 0: librarySetup()
             else:
                 time.sleep(0.3)
                 accountLogin("logout")
+        return
 ## Account Quit
     elif accountAction == "quit":
         print("\n\n\nDo not close application.\nSaving and exiting...\n")
         exitSystem = True
-        if currentAccountUsername != "": Achievements("saving")
+        if accountReady == True: Achievements("saving")
+        return
 ## Email
     elif "emailAccount" in accountAction:
         if deactivateFileOpening == False:
             print("Loading verification system...")
             import smtplib
-            systemEmail = "noreply.oszustindustries@gmail.com"
-            oo7 = pickle.load(open(str(os.getenv('APPDATA') + "\\Oszust Industries\\Data.p"), "rb"))
-            emailMessage = str(accountAction.replace("emailAccount_", ""))
-            to = [accountEmail]
+            systemEmail, oo7, emailMessage, to = "noreply.oszustindustries@gmail.com", pickle.load(open(str(os.getenv('APPDATA') + "\\Oszust Industries\\Data.p"), "rb")), str(accountAction.replace("emailAccount_", "")), [accountEmail]
             if emailMessage == "resetPasswordCode":
                 subject = "Manage Password Code"
                 body = "Below is the code to manage the password for your Oszust Industries account:\n\n" + str(emailCode) + "\n\nThis code expires in 5 minutes.\n\n\nOszust Industries (no-reply)"
             elif emailMessage == "verificationCode":
                 subject = "Verification Code"
                 body = "Below is the code to login into your Oszust Industries account:\n\n""" + str(account2Way) + "\n\nThis code expires in 5 minutes.\n\n\nOszust Industries (no-reply))"
-            message = 'Subject: {}\n\n{}'.format(subject, body)
-            smtp_server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+            message, smtp_server, emailExpireTime = 'Subject: {}\n\n{}'.format(subject, body), smtplib.SMTP_SSL('smtp.gmail.com', 465), datetime.now() + timedelta(minutes=5)
             smtp_server.ehlo()
             smtp_server.login(systemEmail, oo7)
             smtp_server.sendmail(systemEmail, to, message)
-            emailExpireTime = datetime.now() + timedelta(minutes=5)
             smtp_server.close()
             print("\nBe sure to check your junk mail for the email.\n")
+        return
 ## Create Account
     elif "createAccount" in accountAction:
         createAccountStep = int(accountAction.replace("createAccount_", ""))
@@ -167,22 +168,20 @@ def accountLogin(accountAction):
             currentAccountUsername = input(str("\n\n\nA username is your name that you will select when logging into the server.\n\nWhat username would you like for your account? "))
             startedCreateAccount = True
             if currentAccountUsername.lower() in ["cancel", "quit", "exit", "back", "return"]: librarySetup()
-            elif currentAccountUsername not in availableAccounts:
-                if currentAccountUsername.lower().replace(" ", "") not in badUsernames: accountLogin("createAccount_2")
-                else:
-                    print("\nThis username is unavailable.")
-                    accountLogin("createAccount_1")
-            else:
+            elif currentAccountUsername not in availableAccounts and currentAccountUsername.lower().replace(" ", "") not in badUsernames: accountLogin("createAccount_2")
+            elif currentAccountUsername in availableAccounts:
                 print("\nThis username is already in use.")
                 accountLogin("createAccount_1")
+            else:
+                print("\nThis username is unavailable.")
+                accountLogin("createAccount_1")
         elif createAccountStep == 2:
-            accountPassword = ""
-            accountLanguage = "english"
+            accountPassword, accountLanguage = "", "english"
             accountLogin("createAccount_3")
         elif createAccountStep == 3:
-            accountEmail = input(str("\n\n\n\nAn email is required strictly for when you forget your password or a verification code needs to be sent.\n\nWhat email would you like to use for your account? ")).replace(" ", "")
-            if accountEmail.lower() in ["cancel", "quit", "exit"]: librarySetup()
-            elif accountEmail.lower() in ["back", "return"]: accountLogin("createAccount_1")
+            accountEmail = input(str("\n\n\n\nAn email is required strictly for when you forget your password or a verification code needs to be sent.\n\nWhat email would you like to use for your account? ")).lower().replace(" ", "")
+            if accountEmail in ["cancel", "quit", "exit"]: librarySetup()
+            elif accountEmail in ["back", "return"]: accountLogin("createAccount_1")
             elif "@" in accountEmail and "." in accountEmail: accountLogin("createAccount_4")
             else:
                 print("\nThis email is not a valid email.")
@@ -242,10 +241,10 @@ def accountLogin(accountAction):
                 availableAccounts.append(currentAccountUsername)
                 pickle.dump(availableAccounts, open(str(os.getenv('APPDATA') + "\\Oszust Industries\\Available Account.p"), "wb"))
                 packedAccountInformation = [currentAccountUsername, accountLanguage, accountEmail, accountPassword, account2Way, lockDateTime]
-                clear()
+                print(clear())
                 accountLogin("createUserPath")
             elif accountInput.lower() in ["n", "no"]:
-                clear()
+                print(clear())
                 accountLogin("createAccount_1")
             else:
                 print("\nPlease type yes or no.")
@@ -276,8 +275,9 @@ def accountLogin(accountAction):
                 except OSError: pass
                 if currentAccountUsername.lower() == "default": packedAccountInformation = ["Default", "english", "Default", "none", "none", lockDateTime]
                 pickle.dump(packedAccountInformation, open(currentAccountInfoPath + "\\accountInformation.p", "wb"))
-                clear()
+                print(clear())
         if currentAccountUsername != "": accountLogin("readSettings")
+        return
 ## Delete Account
     elif accountAction == "deleteAccount":
         if currentAccountUsername == "":
@@ -285,17 +285,19 @@ def accountLogin(accountAction):
             for i in availableAccounts:
                 if i != "Default": print(str(availableAccounts.index(i) + 1) + ". " + i)
             accountInput = input("\nType the account number to delete the account. ").replace(" ", "")
-            if accountInput == "": accountInput = "0"
-            if (accountInput < str(len(tempAvailableAccounts) + 1) and int(accountInput) > 0) or accountInput in availableAccounts:
-                if accountInput.isnumeric(): currentAccountUsername = availableAccounts[int(accountInput) - 1]
-                else: currentAccountUsername = accountInput
-                currentAccountPath = str(os.getenv('APPDATA') + "\\Oszust Industries\\Accounts\\" + currentAccountUsername + "\\" + systemName)
+            if accountInput.isnumeric() or accountInput in availableAccounts:
+                if accountInput.isdigit() == False:
+                    currentAccountUsername = accountInput
+                    currentAccountPath = str(os.getenv('APPDATA') + "\\Oszust Industries\\Accounts\\" + currentAccountUsername + "\\" + systemName)
+                elif (int(accountInput) < len(tempAvailableAccounts) + 1 and int(accountInput) > 0):
+                    currentAccountUsername = availableAccounts[int(accountInput) - 1]
+                    currentAccountPath = str(os.getenv('APPDATA') + "\\Oszust Industries\\Accounts\\" + currentAccountUsername + "\\" + systemName)
+                else: print(clear() + "You typed an unavailable account number.\n\n\n")
                 accountLogin("deleteAccount")
             elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"] and accountReady == True: settingsMenu("", False)
             elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"] and accountReady == False: librarySetup()
             else:
-                clear()
-                print("You typed an unavailable account number.\n\n\n")
+                print(clear() + "You typed an unavailable account number.\n\n\n")
                 accountLogin("deleteAccount")
         else:
             accountLogin("readSettings")
@@ -306,29 +308,36 @@ def accountLogin(accountAction):
             elif accountInput.lower() in ["n", "no"] and accountReady == True: settingsMenu("", False)
             elif accountInput.lower() in ["n", "no"] and accountReady == False: librarySetup()
             else: accountLogin("deleteAccount")
+        return
 ## Delete Account Forever
     elif accountAction == "deleteAccountForever":
-        print("Deleting Account...")
-        shutil.rmtree(str(os.getenv('APPDATA') + "\\Oszust Industries\\Accounts\\" + currentAccountUsername))
-        if currentAccountUsername.lower() != "default": availableAccounts.remove(currentAccountUsername)
-        pickle.dump(availableAccounts, open(str(os.getenv('APPDATA') + "\\Oszust Industries\\Available Account.p"), "wb"))
-        clear()
-        print(currentAccountUsername + "'s account has been deleted.\n\n\n")
-        currentAccountUsername = ""
-        accountLogin("setup")
+        if deactivateFileOpening == False:
+            print("Deleting Account...")
+            try: shutil.rmtree(str(os.getenv('APPDATA') + "\\Oszust Industries\\Accounts\\" + currentAccountUsername))
+            except: pass
+            if currentAccountUsername.lower() != "default": availableAccounts.remove(currentAccountUsername)
+            pickle.dump(availableAccounts, open(str(os.getenv('APPDATA') + "\\Oszust Industries\\Available Account.p"), "wb"))
+            print(clear())
+            print(currentAccountUsername + "'s account has been deleted.\n\n\n")
+            currentAccountUsername = ""
+            accountLogin("setup")
+        else:
+            print(clear() + "Deleting your account is not possible.\n\n\n")
+            currentAccountUsername = ""
+            accountLogin("setup")
         return
 ## Rename Account
     elif accountAction == "renameAccount":
         newAccountUsername = input(str("\nRename Account:\n\nWhat would you like to rename " + currentAccountUsername + "'s account to? "))
-        if accountInput.lower() in ["cancel", "quit", "exit", "back", "return"] and accountReady == True: settingsMenu("", False)
-        elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"] and accountReady == False: librarySetup()
-        elif newAccountUsername not in availableAccounts:
-            if newAccountUsername.lower() not in badUsernames:
+        if newAccountUsername.lower() in ["cancel", "quit", "exit", "back", "return"] and accountReady == True:
+            print(clear())
+            testAchievements()
+        elif newAccountUsername.lower() in ["cancel", "quit", "exit", "back", "return"] and accountReady == False: librarySetup()
+        elif newAccountUsername not in availableAccounts and newAccountUsername.lower() not in badUsernames:
                 availableAccounts.remove(currentAccountUsername)
                 availableAccounts.append(newAccountUsername)
                 pickle.dump(availableAccounts, open(str(os.getenv('APPDATA') + "\\Oszust Industries\\Available Account.p"), "wb"))
-                currentAccountUsername = newAccountUsername
-                packedAccountInformation = [currentAccountUsername, accountLanguage, accountEmail, accountPassword, account2Way, lockDateTime]
+                currentAccountUsername, packedAccountInformation = newAccountUsername, [newAccountUsername, accountLanguage, accountEmail, accountPassword, account2Way, lockDateTime]
                 pickle.dump(packedAccountInformation, open(currentAccountInfoPath + "\\accountInformation.p", "wb"))
                 try: accountOwnedDLC = pickle.load(open(currentAccountPath + "\\accountOwnedDLC.p", "rb"))
                 except OSError: pickle.dump([currentAccountUsername], open(currentAccountPath + "\\accountOwnedDLC.p", "wb"))
@@ -336,17 +345,16 @@ def accountLogin(accountAction):
                 pickle.dump(accountOwnedDLC, open(currentAccountPath + "\\accountOwnedDLC.p", "wb"))
                 os.rename(currentAccountInfoPath, str(os.getenv('APPDATA') + "\\Oszust Industries\\Accounts\\" + currentAccountUsername))
                 librarySetup()
-            else:
-                print("This username is unavailable.\n\n\n")
-                accountLogin("renameAccount")
-        else:
-            print("This username is already in use.\n\n\n")
+        elif newAccountUsername in availableAccounts:
+            print("\nThis username is already in use.\n\n\n")
             accountLogin("renameAccount")
+        else:
+            print("\nThis username is unavailable.\n\n\n")
+            accountLogin("renameAccount")
+        return
 ## Change Password
     elif accountAction == "changeAccountPassword":
-        if emailconfirmed == False:
-            clear()
-            print("Change Account Password:")
+        if emailconfirmed == False: print(clear() + "Change Account Password:")
         if accountPassword == "none":
             print("\n\n1.Add password")
             accountInput = input(str("\nType the number of the action for " + currentAccountUsername + "'s password: ")).replace(" ", "")
@@ -357,77 +365,72 @@ def accountLogin(accountAction):
             elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"] and accountReady == True: settingsMenu("", False)
             elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"] and accountReady == False: librarySetup()
             else:
-                clear()
-                print("Please type one of the following actions.\n\n\n")
+                print(clear() + "Please type one of the following actions.\n\n\n")
                 accountLogin("changeAccountPassword")
         else:
             if emailconfirmed == False:
-                accountInput = input(str("\nType your email to confirm your identity: ")).replace(" ", "")
+                accountInput = input(str("\nType your email to confirm your identity: ")).lower().replace(" ", "")
                 if accountInput == accountEmail:
                     emailCode = randrange(100000, 999999)
                     accountLogin("emailAccount_resetPasswordCode")
                     accountInput = input(str("\nA code has been sent to your email to manage your password. Type the code here: ")).replace(" ", "")
-                elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"] and accountReady == True:
+                elif accountInput in ["cancel", "quit", "exit", "back", "return"] and accountReady == True:
                     settingsMenu("", False)
                     return
-                elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"] and accountReady == False:
+                elif accountInput in ["cancel", "quit", "exit", "back", "return"] and accountReady == False:
                     librarySetup()
                     return
                 else:
-                    clear()
-                    print("\n\nEmail doesn't match " + currentAccountUsername + "'s email.\n\n\n")
+                    print(clear() + "Email doesn't match " + currentAccountUsername + "'s email.\n\n\n")
                     accountLogin("setup")
             if emailconfirmed == True or (accountInput == str(emailCode) and datetime.now() < emailExpireTime):
                 emailconfirmed = True
-                print("\n\n1.Change password\n2.Remove password")
+                print(clear() + "Change Account Password:\n\n1.Change password\n2.Remove password")
                 accountInput = input(str("\nType the number of the action for " + currentAccountUsername + "'s password: ")).replace(" ", "")
                 if accountInput == "1":
                     accountPassword = input(str("\nWhat new password would you like for your account? "))
                     if len(accountPassword) < 5:
-                        print("Your password needs to be at least five characters long.")
+                        print(clear() + "Change Account Password:\n\nYour password needs to be at least five characters long.")
                         accountLogin("changeAccountPassword")
                     elif accountPassword.lower() in weakPasswords:
-                        print("Your password is too weak. Create a more unique password.")
+                        print(clear() + "Change Account Password:\n\nYour password is too weak. Create a more unique password.")
                         accountLogin("changeAccountPassword")
                     else:
                         pickle.dump([currentAccountUsername, accountLanguage, accountEmail, accountPassword, account2Way, lockDateTime], open(currentAccountInfoPath + "\\accountInformation.p", "wb"))
-                        print("\n\nThe password has been changed on your account.")
-                        clear()
+                        print(clear() + "The password has been changed on your account.\n\n")
                         accountLogin("setup")
                 elif accountInput == "2":
                     pickle.dump([currentAccountUsername, accountLanguage, accountEmail, "none", account2Way, lockDateTime], open(currentAccountInfoPath + "\\accountInformation.p", "wb"))
-                    print("\n\nThe password has been removed from your account.")
-                    clear()
+                    print(clear() + "The password has been removed from your account.\n\n")
                     accountLogin("readSettings")
                 elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"] and accountReady == True: settingsMenu("", False)
                 elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"] and accountReady == False: librarySetup()
                 else:
-                    clear()
-                    print("Please type one of the following actions.\n\n\n")
+                    print(clear() + "Change Account Password:\n\nPlease type one of the following actions.\n")
                     accountLogin("changeAccountPassword")
             elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"] and accountReady == True: settingsMenu("", False)
             elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"] and accountReady == False: librarySetup()
             elif (accountInput == str(emailCode) and datetime.now() >= emailExpireTime) or int(accountInput) in expiredCodes:
                 print("\n\nThis code has expired. A new code has been sent to your email.")
-                expiredCodes = expiredCodes.append(account2Way)
-                emailCode = randrange(100000, 999999)
+                expiredCodes, emailCode = expiredCodes.append(account2Way), randrange(100000, 999999)
                 accountLogin("changeAccountPassword")
             else:
-                clear()
-                print("\n\nIncorrect verification code.\n\n\n")
+                print(clear() + "Incorrect verification code.\n\n\n")
                 accountLogin("setup")
+        return
 ## Corrupt Account
     elif accountAction == "corruptAccount":
-        clear()
-        accountInput = input(str("Corrupt Account:\n\n\n" + currentAccountUsername + "'s account is unreadable.\n\nWould you like to delete " + currentAccountUsername + "'s account? (yes/no) ")).replace(" ", "")
-        if accountInput.lower() in ["y", "yes"]: accountLogin("deleteAccountForever")
-        elif accountInput.lower() in ["n", "no"]: librarySetup()
+        accountInput = input(str(clear() + "Corrupt Account:\n\n\n" + currentAccountUsername + "'s account is unreadable.\n\nWould you like to delete " + currentAccountUsername + "'s account? (yes/no) ")).lower().replace(" ", "")
+        if accountInput in ["y", "yes"]: accountLogin("deleteAccountForever")
+        elif accountInput in ["n", "no"]: librarySetup()
         else:
-            clear()
+            print(clear())
             accountLogin("corruptAccount")
+        return
 ## Find Account Games
     elif accountAction == "accountGames":
-        if deactivateFileOpening == False:
+        if os.path.isdir(currentAccountInfoPath) == False and deactivateFileOpening == False: accountLogin("corruptAccount")
+        elif deactivateFileOpening == False:
             try: packedAccountGames = pickle.load(open(currentAccountInfoPath + "\\accountGames.p", "rb"))
             except OSError: packedAccountGames = []
             if systemName not in packedAccountGames:
@@ -437,15 +440,14 @@ def accountLogin(accountAction):
                 except OSError: pass
                 packedAccountGames.append(systemName)
             pickle.dump(packedAccountGames, open(currentAccountInfoPath + "\\accountGames.p", "wb"))
+        return
 ## Read Game Settings
     elif accountAction == "readSettings":
-        print("\n\nLoading Account...")
+        if currentAccountUsername != "Default": print("\n\nLoading Account...")
         if deactivateFileOpening == False:
             currentAccountInfoPath = str(os.getenv('APPDATA') + "\\Oszust Industries\\Accounts\\" + currentAccountUsername)
             currentAccountPath = (currentAccountInfoPath + "\\" + systemName)
-        else:
-            currentAccountInfoPath = ""
-            currentAccountPath = ""
+        else: currentAccountInfoPath, currentAccountPath = "", ""
         accountLogin("accountGames")
         if deactivateFileOpening == False:
             try: packedAccountInformation = pickle.load(open(currentAccountInfoPath + "\\accountInformation.p", "rb"))
@@ -454,33 +456,21 @@ def accountLogin(accountAction):
             else:
                 try: packedSettings = pickle.load(open(currentAccountPath + "\\settingsSave.p", "rb"))
                 except OSError: packedSettings = [True, False]
-        else:
-            packedAccountInformation = ["N/A"]
-            packedSettings = [True, False]
-        if "N/A" not in packedAccountInformation:
-            currentAccountUsername = packedAccountInformation[0]
-            accountLanguage = packedAccountInformation[1]
-            accountEmail = packedAccountInformation[2]
-            accountPassword = packedAccountInformation[3]
-            account2Way = packedAccountInformation[4]
-            lockDateTime = packedAccountInformation[5]
+        else: packedAccountInformation, packedSettings = ["N/A"], [True, False]
+        if "N/A" not in packedAccountInformation: currentAccountUsername, accountLanguage, accountEmail, accountPassword, account2Way, lockDateTime = packedAccountInformation[0], packedAccountInformation[1], packedAccountInformation[2], packedAccountInformation[3], packedAccountInformation[4], packedAccountInformation[5]
         elif deactivateFileOpening == False:
             accountLogin("corruptAccount")
             return
-        elif deactivateFileOpening == True:
-            accountPassword = "none"
-            account2Way = "none"
+        elif deactivateFileOpening == True: accountPassword, account2Way = "none", "none"
         if lockDateTime != "" and datetime.now() < lockDateTime:
-            clear()
             timeLeftInLock = int(math.ceil((lockDateTime - datetime.now()).seconds / 60))
-            if timeLeftInLock <= 1: print("This account is still locked for " + str(timeLeftInLock) + " more minute.\n\n\n")
-            else: print("This account is still locked for " + str(timeLeftInLock) + " more minutes.\n\n\n")
+            if timeLeftInLock <= 1: print(clear() + "This account is still locked for " + str(timeLeftInLock) + " more minute.\n\n\n")
+            else: print(clear() + "This account is still locked for " + str(timeLeftInLock) + " more minutes.\n\n\n")
             accountLogin("setup")
             return
-        if accountPassword == "none" and account2Way == "none": clear()
+        if accountPassword == "none" and account2Way == "none": print(clear())
         elif passwordAttemptsLeft <= 0:
-            clear()
-            print("\n\nIncorrect password.\nThe account has been locked for 5 minute.\n\n\n")
+            print(clear() + "Incorrect password.\nThe account has been locked for 5 minute.\n\n\n")
             lockDateTime = datetime.now() + timedelta(minutes=5)
             pickle.dump([currentAccountUsername, accountLanguage, accountEmail, accountPassword, account2Way, lockDateTime], open(currentAccountInfoPath + "\\accountInformation.p", "wb"))
             accountLogin("setup")
@@ -490,13 +480,12 @@ def accountLogin(accountAction):
             if accountInput.lower() == "forgot password":
                 accountLogin("changeAccountPassword")
                 return
-            elif accountInput == accountPassword: clear()
+            elif accountInput == accountPassword: print(clear())
             elif accountInput.lower() in ["back", "quit", "return", "logout"]:
                 librarySetup()
                 return
             else:
-                clear()
-                print("\n\nIncorrect password.\n\n\n")
+                print(clear() + "Incorrect password.\n\n\n")
                 passwordAttemptsLeft -= 1
                 accountLogin("readSettings")
         if deactivateFileOpening == False and account2Way != "none":
@@ -516,18 +505,15 @@ def accountLogin(accountAction):
                 librarySetup()
                 return
             elif (accountInput == str(account2Way) and datetime.now() >= emailExpireTime) or int(accountInput) in expiredCodes:
-                clear()
-                print("\n\nThis code has expired. A new code has been sent to your email.")
+                print(clear() + "This code has expired. A new code has been sent to your email.")
                 expiredCodes.append(account2Way)
                 accountLogin("readSettings")
             else:
-                clear()
-                print("\n\nIncorrect verification code.\nThe account has been locked for 1 minute.\n\n\n")
+                print(clear() + "Incorrect verification code.\nThe account has been locked for 1 minute.\n\n\n")
                 pickle.dump([currentAccountUsername, accountLanguage, accountEmail, accountPassword, account2Way, (datetime.now() + timedelta(minutes=1))], open(currentAccountInfoPath + "\\accountInformation.p", "wb"))
                 accountLogin("setup")
         elif account2Way == "unavailable":
-            clear()
-            print("This account has 2 factor verification enabled. We are unable to securely send a code. Please try again in a little bit.\n\n\n")
+            print(clear() + "This account has 2 factor verification enabled. We are unable to securely send a code. Please try again in a little bit.\n\n\n")
             accountLogin("setup")
         if len(packedSettings) >= 1: win10ToastActive = packedSettings[0]
         else: win10ToastActive = True
@@ -535,13 +521,14 @@ def accountLogin(accountAction):
         else: resetAchievements = False
         accountLogin("saveSettings")
         accountLogin("readOwnedDLC")
+        return
 ## Save Settings
     elif accountAction == "saveSettings":
         if deactivateFileOpening == False: pickle.dump([win10ToastActive, resetAchievements], open(currentAccountPath + "\\settingsSave.p", "wb"))
+        return
 ## Read Owned DLC
     elif accountAction == "readOwnedDLC":
-        freeGameDLC = []
-        accountActiveOwnedDLC = []
+        freeGameDLC, accountActiveOwnedDLC = [], []
         if deactivateFileOpening == False:
             try: accountOwnedDLC = pickle.load(open(currentAccountPath + "\\accountOwnedDLC.p", "rb"))
             except OSError:
@@ -559,10 +546,7 @@ def accountLogin(accountAction):
             if accountOwnedDLC.index(i) < (len(accountOwnedDLC) - 1) and accountOwnedDLC[accountOwnedDLC.index(i) + 1] == "enable":
                 accountActiveOwnedDLC.append(i)
         if deactivateFileOpening == False: pickle.dump(accountOwnedDLC, open(currentAccountPath + "\\accountOwnedDLC.p", "wb"))
-
-def clear():
-## Clear Output
-    print("\n" * 70)
+        return
 
 def waitingAchievements():
 ## Threading - Waiting Achievements
@@ -570,7 +554,7 @@ def waitingAchievements():
     while True:
         if len(waitingAchievementsList) > 0 and toaster.notification_active() == False:
             Achievements(waitingAchievementsList[0])
-            waitingAchievementsList.remove(str(waitingAchievementsList[0]))
+            waitingAchievementsList.remove(waitingAchievementsList[0])
         elif exitSystem == True and len(waitingAchievementsList) == 0: return
         else: time.sleep(0.3)
 
@@ -581,7 +565,6 @@ def Achievements(achievementToGain):
     global achievementIconLocation, achievementProgressTracker, achievementVersion, availableAchievements, currentPlaytime, earnedBronze, earnedGold, earnedPlatinum, earnedSilver, gained_Achievements, lastPlaytimeDatePlayed, playtimeStartTime, resetAchievements, toaster, waitingAchievementsList, win10ToastActive
     availableAchievements = 5
     defaultAchievementProgressTracker = [0, 10, 0, 5]
-    if False and deactivateFileOpening == False: copy(str(Path(__file__).resolve().parent) + "\\Achievements.json", currentAccountPath)
 ## Last Play Date
     if exitSystem == True: lastPlaytimeDatePlayed = date.today().strftime("%m/%d/%y")
     else: lastPlaytimeDatePlayed = "Currently In-game"
@@ -589,21 +572,21 @@ def Achievements(achievementToGain):
     if achievementToGain == "reset":
         if resetSettings == True: print("Loading 1/2: (Resetting settings)...\nLoading 2/2: (Resetting achievements - " + newestAchievementVersion + ")...\n\n\n")
         else: print("Loading 1/1: (Resetting achievements - " + newestAchievementVersion + ")...\n\n\n")
-        achievementProgressTracker = defaultAchievementProgressTracker
         if newestAchievementVersion not in ["v1.0.0", "v1.1.0", "v1.2.0"]: gained_Achievements = [newestAchievementVersion, lastPlaytimeDatePlayed, currentPlaytime, availableAchievements, 0, 0, 0, 0,]
         elif newestAchievementVersion not in ["v1.0.0"]: gained_Achievements = [availableAchievements, 0, 0, 0, 0,]
         else: gained_Achievements = []
+        achievementProgressTracker, achievementVersion, resetAchievements = defaultAchievementProgressTracker, newestAchievementVersion, False
         if deactivateFileOpening == False:
             pickle.dump(achievementProgressTracker, open(currentAccountPath + "\\achievementProgressTracker.p", "wb"))
             pickle.dump(gained_Achievements, open(currentAccountPath + "\\achievementSave.p", "wb"))
-        resetAchievements = False
         accountLogin("saveSettings")
         return
 ## Setup System
     elif achievementToGain == "setup":
+        if systemName != "Achievement Notifications Library" and deactivateFileOpening == False: copy(str(Path(__file__).resolve().parent) + "\\Achievements.json", currentAccountPath)
         if enableAchievementThreading == True:
             import threading
-            backroundAchievementThread = threading.Thread(name='waitingAchievements', target=waitingAchievements)
+            backroundAchievementThread = threading.Thread(name="waitingAchievements", target=waitingAchievements)
             waitingAchievementsList = []
             backroundAchievementThread.start()
         if deactivateFileOpening == False:
@@ -611,37 +594,35 @@ def Achievements(achievementToGain):
                 gained_Achievements = pickle.load(open(currentAccountPath + "\\achievementSave.p", "rb"))
                 if len(gained_Achievements) > 0: currentPlaytime = gained_Achievements[2]
                 else: currentPlaytime = "0"
-            except OSError:
-                resetAchievements = True
-                currentPlaytime = "0"
+            except OSError: resetAchievements, currentPlaytime = True, "0"
         else: currentPlaytime = "0"
 ## Remove User Achievements
-        if deactivateFileOpening == False and (overrideResetAchivements == True or resetAchievements == True): Achievements("reset")
-        elif deactivateFileOpening == True: Achievements("reset")
+        if deactivateFileOpening == True or (overrideResetAchivements == True or resetAchievements == True): Achievements("reset")
 ## Load Achievement System
         if deactivateFileOpening == False:
             try:
                 from win10toast import ToastNotifier
+                toaster = ToastNotifier()
                 win10ToastActive = True
             except:
                 try:
-                    print("Installing required packages...\n\n\n")
+                    print("\nInstalling required packages...\n\n")
                     os.system("pip install win10toast")
                     from win10toast import ToastNotifier
+                    toaster = ToastNotifier()
                     win10ToastActive = True
-                    clear()
+                    print(clear())
                 except:
-                    clear()
-                    print("Packages failed to install.\n\nDisabling achievement notifications...\n\n\n")
+                    print(clear() + "Packages failed to install.\n\nDisabling achievement notifications...\n\n\n")
                     win10ToastActive = False
-            if win10ToastActive == True: toaster = ToastNotifier()
             try: achievementIconLocation = str(Path(__file__).resolve().parent)
             except: win10ToastActive = False
             try: gained_Achievements = pickle.load(open(currentAccountPath + "\\achievementSave.p", "rb"))
             except OSError: Achievements("reset")
-        else: toaster = ""
+        else: win10ToastActive = False
+        print(clear())
 ## Load Achievement Progress System
-        if deactivateFileOpening == False and (overrideResetAchivements == False and resetAchievements == False):
+        if deactivateFileOpening == False:
             try: achievementProgressTracker = pickle.load(open(currentAccountPath + "\\achievementProgressTracker.p", "rb"))
             except OSError: achievementProgressTracker = defaultAchievementProgressTracker
         else: achievementProgressTracker = defaultAchievementProgressTracker
@@ -650,47 +631,37 @@ def Achievements(achievementToGain):
             pickle.dump(achievementProgressTracker, open(currentAccountPath + "\\achievementProgressTracker.p", "wb"))
             if len(gained_Achievements) > 0:
                 achievementVersion = gained_Achievements[0]
-                if ("v1" not in str(achievementVersion)) and (len(gained_Achievements) >= 7) and ("Achievement" not in str(gained_Achievements[6])): achievementVersion = "v1.2.0"
-                elif str(achievementVersion) == "0" or str(achievementVersion) == str(availableAchievements): achievementVersion = "v1.1.0"
-                elif "v1" not in str(achievementVersion): achievementVersion = "v1.0.0"
+                if ("v1" not in achievementVersion) and (len(gained_Achievements) >= 7) and ("Achievement" not in str(gained_Achievements[6])): achievementVersion = "v1.2.0"
+                elif achievementVersion == "0" or achievementVersion == str(availableAchievements): achievementVersion = "v1.1.0"
+                elif "v1" not in achievementVersion: achievementVersion = "v1.0.0"
             else: achievementVersion = "v1.0.0"
-            if achievementVersion not in ["v1.0.0", "v1.1.0", "v1.2.0"]:
-                playtimeStartTime = datetime.now()
-                currentPlaytime = float(gained_Achievements[2])
-                earnedBronze = int(gained_Achievements[4])
-                earnedSilver = int(gained_Achievements[5])
-                earnedGold = int(gained_Achievements[6])
-                earnedPlatinum = int(gained_Achievements[7])
-            elif achievementVersion not in ["v1.0.0"]:
-                earnedBronze = int(gained_Achievements[1])
-                earnedSilver = int(gained_Achievements[2])
-                earnedGold = int(gained_Achievements[3])
-                earnedPlatinum = int(gained_Achievements[4])
-            print("Current Achievements: " + str(gained_Achievements))
-            print("Current Version: " + achievementVersion)
+            if achievementVersion not in ["v1.0.0", "v1.1.0", "v1.2.0"]: playtimeStartTime, currentPlaytime, earnedBronze, earnedSilver, earnedGold, earnedPlatinum = datetime.now(), float(gained_Achievements[2]), int(gained_Achievements[4]), int(gained_Achievements[5]), int(gained_Achievements[6]), int(gained_Achievements[7])
+            elif achievementVersion not in ["v1.0.0"]: earnedBronze, earnedSilver, earnedGold, earnedPlatinum = int(gained_Achievements[1]), int(gained_Achievements[2]), int(gained_Achievements[3]), int(gained_Achievements[4])
+            print("Current Achievements: " + str(gained_Achievements) + "\nCurrent Version: " + achievementVersion)
         Achievements("saving")
-## System Achievements
-    if deactivateFileOpening == False and win10ToastActive == True and toaster.notification_active() and enableAchievementThreading == True:
-        waitingAchievementsList.append(str(achievementToGain))
         return
-    if deactivateFileOpening == False and achievementToGain not in ["reset", "setup", "ready"] and "Progress" not in achievementToGain and achievementToGain not in gained_Achievements:
+## System Achievements
+    if win10ToastActive == True and enableAchievementThreading == True and toaster.notification_active():
+        waitingAchievementsList.append(achievementToGain)
+        return
+    elif achievementToGain not in ["reset", "setup", "ready"] and "Progress" not in achievementToGain and achievementToGain not in gained_Achievements and deactivateFileOpening == False:
         if achievementToGain == "Achievement_DEBUG":
-            if win10ToastActive == True: toaster.show_toast("Trophy Level - Achievement Title", str("Achievement Description." + "\n(" + currentAccountUsername + ")"), icon_path = achievementIconLocation + "\Achievement Icons\Bronze-trophy.ico", duration=5, threaded=enableAchievementThreading)
+            if win10ToastActive == True: toaster.show_toast("Trophy Level - Achievement Title", "Achievement Description." + "\n(" + currentAccountUsername + ")", icon_path = achievementIconLocation + "\Achievement Icons\Bronze-trophy.ico", duration = 5, threaded = enableAchievementThreading)
             if achievementVersion not in ["v1.0.0"]: medalEarned = "Bronze"
         elif achievementToGain == "Achievement_Welcome":
-            if win10ToastActive == True: toaster.show_toast("Start a new game. - 1", str("Bronze - Welcome to the Game - 1" + "\n(" + currentAccountUsername + ")"), icon_path = achievementIconLocation + "\Achievement Icons\Bronze-trophy.ico", duration=5, threaded=enableAchievementThreading)
+            if win10ToastActive == True: toaster.show_toast("Start a new game. - 1", "Bronze - Welcome to the Game - 1" + "\n(" + currentAccountUsername + ")", icon_path = achievementIconLocation + "\Achievement Icons\Bronze-trophy.ico", duration = 5, threaded = enableAchievementThreading)
             if achievementVersion not in ["v1.0.0"]: medalEarned = "Bronze"
         elif achievementToGain == "Achievement_Welcome2":
-            if win10ToastActive == True: toaster.show_toast("Bronze - Welcome to the Game - 2", str("Start a new game. - 2" + "\n(" + currentAccountUsername + ")"), icon_path = achievementIconLocation + "\Achievement Icons\Bronze-trophy.ico", duration=5, threaded=enableAchievementThreading)
+            if win10ToastActive == True: toaster.show_toast("Bronze - Welcome to the Game - 2", "Start a new game. - 2" + "\n(" + currentAccountUsername + ")", icon_path = achievementIconLocation + "\Achievement Icons\Bronze-trophy.ico", duration = 5, threaded = enableAchievementThreading)
             if achievementVersion not in ["v1.0.0"]: medalEarned = "Bronze"
         elif achievementToGain == "Achievement_Welcome3":
-            if win10ToastActive == True: toaster.show_toast("Bronze - Welcome to the Game - 3", str("Start a new game. - 3" + "\n(" + currentAccountUsername + ")"), icon_path = achievementIconLocation + "\Achievement Icons\Bronze-trophy.ico", duration=5, threaded=enableAchievementThreading)
+            if win10ToastActive == True: toaster.show_toast("Bronze - Welcome to the Game - 3", "Start a new game. - 3" + "\n(" + currentAccountUsername + ")", icon_path = achievementIconLocation + "\Achievement Icons\Bronze-trophy.ico", duration = 5, threaded = enableAchievementThreading)
             if achievementVersion not in ["v1.0.0"]: medalEarned = "Bronze"
         elif achievementToGain == "Achievement_Hot_Streak":
-            if win10ToastActive == True: toaster.show_toast("Silver - You're on Fire!", str("Go on a streak of 5 correct games." + "\n(" + currentAccountUsername + ")"), icon_path = achievementIconLocation + "\Achievement Icons\Silver-trophy.ico", duration=5, threaded=enableAchievementThreading)
+            if win10ToastActive == True: toaster.show_toast("Silver - You're on Fire!", "Go on a streak of 5 correct games." + "\n(" + currentAccountUsername + ")", icon_path = achievementIconLocation + "\Achievement Icons\Silver-trophy.ico", duration = 5, threaded = enableAchievementThreading)
             if achievementVersion not in ["v1.0.0"]: medalEarned = "Silver"
         elif achievementToGain == "Achievement_All_Animals":
-            if win10ToastActive == True: toaster.show_toast("Gold - Zoologist", str("Complete all the game topics in the animals category." + "\n(" + currentAccountUsername + ")"), icon_path = achievementIconLocation + "\Achievement Icons\Gold-trophy.ico", duration=5, threaded=enableAchievementThreading)
+            if win10ToastActive == True: toaster.show_toast("Gold - Zoologist", "Complete all the game topics in the animals category." + "\n(" + currentAccountUsername + ")", icon_path = achievementIconLocation + "\Achievement Icons\Gold-trophy.ico", duration = 5, threaded = enableAchievementThreading)
             if achievementVersion not in ["v1.0.0"]: medalEarned = "Gold"
         elif achievementToGain != "saving": print("GAME ERROR(No Achievement with that name found)")
         if achievementVersion not in ["v1.0.0"] and achievementToGain != "saving":
@@ -698,18 +669,15 @@ def Achievements(achievementToGain):
             elif medalEarned == "Silver": earnedSilver += 1
             elif medalEarned == "Gold": earnedGold += 1
             elif medalEarned == "Platinum": earnedPlatinum += 1
-        if achievementVersion not in ["v1.0.0", "v1.1.0", "v1.2.0"]:
-            duration = datetime.now() - playtimeStartTime
-            currentPlaytime = round(float(currentPlaytime) + duration.total_seconds(), 2)
-            playtimeStartTime = datetime.now()
-        if achievementVersion not in ["v1.0.0", "v1.1.0", "v1.2.0"]: gained_Achievements = [str(achievementVersion)] + [str(lastPlaytimeDatePlayed)] + [str(currentPlaytime)] + [str(availableAchievements)] + [str(earnedBronze)] + [str(earnedSilver)] + [str(earnedGold)] + [str(earnedPlatinum)] + gained_Achievements[8:]
-        elif achievementVersion not in ["v1.0.0"]: gained_Achievements = [str(availableAchievements)] + [str(earnedBronze)] + [str(earnedSilver)] + [str(earnedGold)] + [str(earnedPlatinum)] + gained_Achievements[5:]
+        if achievementVersion not in ["v1.0.0", "v1.1.0", "v1.2.0"]: currentPlaytime, playtimeStartTime = round(float(currentPlaytime) + ((datetime.now() - playtimeStartTime).total_seconds()), 2), datetime.now()
+        if achievementVersion not in ["v1.0.0", "v1.1.0", "v1.2.0"]: gained_Achievements = [achievementVersion] + [str(lastPlaytimeDatePlayed)] + [str(currentPlaytime)] + [str(availableAchievements)] + [str(earnedBronze)] + [str(earnedSilver)] + [str(earnedGold)] + [str(earnedPlatinum)] + gained_Achievements[8:]
+        elif achievementVersion not in ["v1.0.0"]: gained_Achievements = [availableAchievements] + [str(earnedBronze)] + [str(earnedSilver)] + [str(earnedGold)] + [str(earnedPlatinum)] + gained_Achievements[5:]
         else: gained_Achievements = gained_Achievements
         if achievementToGain != "saving": gained_Achievements.append(achievementToGain)
         if achievementVersion not in ["v1.0.0", "v1.1.0"] and achievementToGain != "saving": gained_Achievements.append(str(date.today().strftime("%m/%d/%y") + " " + datetime.now().strftime("%I:%M %p")))
-        if overrideResetAchivements == False and resetAchievements == False and deactivateFileOpening == False: pickle.dump(gained_Achievements, open(currentAccountPath + "\\achievementSave.p", "wb"))
+        if deactivateFileOpening == False: pickle.dump(gained_Achievements, open(currentAccountPath + "\\achievementSave.p", "wb"))
 ## System Achievements Progress
-    elif deactivateFileOpening == False and achievementToGain not in ["reset", "setup", "ready"] and "Progress" in achievementToGain:
+    elif  achievementToGain not in ["reset", "setup", "ready"] and "Progress" in achievementToGain:
         achievementToGain = achievementToGain.replace("Achievement_Progress_", "")
         if len(achievementProgressTracker) >= 1: animalsCategory = int(achievementProgressTracker[0])
         else: animalsCategory = int(defaultAchievementProgressTracker[0])
@@ -725,49 +693,49 @@ def Achievements(achievementToGain):
         if "Achievement_Hot_Streak" not in gained_Achievements and (winningStreak >= maxWinningStreak): Achievements("Achievement_Hot_Streak")
 ## Save Progress
         achievementProgressTracker = [animalsCategory, maxAnimalsCategory, winningStreak, maxWinningStreak]
-        if overrideResetAchivements == False and resetAchievements == False and deactivateFileOpening == False: pickle.dump(achievementProgressTracker, open(currentAccountPath + "\\achievementProgressTracker.p", "wb"))
-
+        if deactivateFileOpening == False: pickle.dump(achievementProgressTracker, open(currentAccountPath + "\\achievementProgressTracker.p", "wb"))
 
 ## Library Testing:
 def testAchievements():
-## Activate Achievement
+## Test Achievements
     global exitSystem
     if resetSettings == True and (overrideResetAchivements == False and resetAchievements == False): print("\nLoading 1/1: (Resetting settings)...")
-    userAnswer = input("\nINPUT: ").replace(" ", "")
+    userAnswer = input("\nINPUT: ").lower().replace(" ", "")
     start = time.time()
-    if userAnswer.lower() == "welcome":
+    if userAnswer == "welcome":
         print("Rewarding achievement = Achievement_Welcome")
         Achievements("Achievement_Welcome")
-    elif userAnswer.lower() == "welcome2":
+    elif userAnswer == "welcome2":
         print("Rewarding achievement = Achievement_Welcome2")
         Achievements("Achievement_Welcome2")
-    elif userAnswer.lower() == "welcome3":
+    elif userAnswer == "welcome3":
         print("Rewarding achievement = Achievement_Welcome3")
         Achievements("Achievement_Welcome3")
-    elif userAnswer.lower() == "hotstreak":
+    elif userAnswer == "hotstreak":
         print("Rewarding achievement = Achievement_Hot_Streak")
         Achievements("Achievement_Hot_Streak")
-    elif userAnswer.lower() == "animal":
+    elif userAnswer == "animal":
         currentCategory = "Animals"
         print("Rewarding one more = " + currentCategory)
         Achievements("Achievement_Progress_" + currentCategory)
-    elif userAnswer.lower() == "exit": 
-        accountLogin("quit")
-        return
-    elif userAnswer.lower() == "stats":
+    elif userAnswer == "stats":
         if deactivateFileOpening == False: print("Current achievements: " + str(gained_Achievements) + "\nCurrent achievement progress: " + str(achievementProgressTracker))
         else: print("Either achievements are disabled or file opening is disabled.")
-    elif userAnswer.lower() == "rename":
+    elif userAnswer == "rename":
         accountLogin("renameAccount")
         return
-    elif userAnswer.lower() == "logout":
+    elif userAnswer == "logout":
         accountLogin("logout")
         return
-    elif userAnswer.lower() in ["clear", "reset"]: Achievements("reset")
+    elif userAnswer == "exit": 
+        accountLogin("quit")
+        return
+    elif userAnswer in ["clear", "reset"]: Achievements("reset")
     else: print("Debug command not accepted.")
     print("(" + str(round((time.time() - start), 6)) + " seconds)")
     testAchievements()
 
 
 ## Start System
-librarySetup()
+try: librarySetup()
+except Exception as Argument: crashMessage()
