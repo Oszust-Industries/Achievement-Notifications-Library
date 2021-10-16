@@ -1,6 +1,6 @@
 ## Achievement Notifications Library v1.5.0 - Oszust Industries
-dateInformation = "Created on: 5-15-21 - Last update: 10-14-21"
-libraryVersion = "v1.5.0-Beta(21.10.14.4)"
+dateInformation = "Created on: 5-15-21 - Last update: 10-15-21"
+libraryVersion = "v1.5.0-Beta(21.10.15.1)"
 newestAchievementVersion = libraryVersion
 def clear(): return ("\n" * 70)
 from datetime import date, datetime, timedelta
@@ -14,7 +14,7 @@ def libraryConfig():
     global appBuild, autoUpdate, deactivateFileOpening, enableAccountSystem, enableAchievementThreading, exitSystem, overrideResetAchivements, resetSettings, systemName
     systemName, exitSystem = "Achievement Notifications Library", False
 ## Change Configures
-    appBuild = "Beta"                 ## The build the app is running (Beta, Main)
+    appBuild = "Dev"                 ## The build the app is running (Beta, Main)
     resetSettings = False             ## Reset account's settings on login
     overrideResetAchivements = False  ## Reset account's achievements on login
     enableAchievementThreading = True ## Enables achievements to be ran in separate thread
@@ -470,8 +470,7 @@ def accountLogin(accountAction):
             return
         if accountPassword == "none" and account2Way == "none": print(clear())
         elif passwordAttemptsLeft <= 0:
-            print(clear())
-            print("\n\nIncorrect password.\nThe account has been locked for 5 minute.\n\n\n")
+            print(clear() + "Incorrect password.\nThe account has been locked for 5 minute.\n\n\n")
             lockDateTime = datetime.now() + timedelta(minutes=5)
             pickle.dump([currentAccountUsername, accountLanguage, accountEmail, accountPassword, account2Way, lockDateTime], open(currentAccountInfoPath + "\\accountInformation.p", "wb"))
             accountLogin("setup")
