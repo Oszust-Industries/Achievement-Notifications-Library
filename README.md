@@ -13,6 +13,9 @@ Languages: English
 
 <br /> This library reads and writes game saves on your computer.
 
+This library uses AutoUpdater.
+<br /> (*Updates are auto-checked and installed when available*)
+
 This library uses [Windows 10 Toast](https://pypi.org/project/win10toast/) package to display notifications on your system.
 <br /> (*Windows 10 Toast must be installed for achievement notifications*)
 
