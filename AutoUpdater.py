@@ -13,8 +13,7 @@ def update(appBuild):
         except: lastUpdateDate = datetime(2018, 1, 1, 1, 1, 1, 0)
         if (datetime.utcnow() - lastUpdateDate).days != 0:
             print("Updating...")
-            current = str(Path(__file__).resolve().parent)
-            appdata = os.getenv('APPDATA') + "\\Oszust Industries"
+            current, appdata = str(Path(__file__).resolve().parent), os.getenv('APPDATA') + "\\Oszust Industries"
             ## Download Update
             if path.exists(appdata) == False: os.mkdir(appdata)
             if path.exists(appdata + "\\temp") == False: os.mkdir(appdata + "\\temp")
@@ -43,5 +42,4 @@ def update(appBuild):
             shutil.rmtree(appdata + "\\temp")
             pickle.dump(datetime.utcnow(), open(current + "\\lastUpdateDate.p", "wb"))
             if restartNeed == True: return True
-            else: return False
     except Exception as Argument: print("Update Failed. (" + str(Argument) + ")")
