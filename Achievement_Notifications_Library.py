@@ -1,5 +1,5 @@
 ## Achievement Notifications Library v1.5.0 - Oszust Industries
-dateInformation = "Created on: 5-15-21 - Last update: 10-16-21"
+dateInformation = "Created on: 5-15-21 - Last update: 10-29-21"
 libraryVersion = "v1.5.0"
 newestAchievementVersion = libraryVersion
 def clear(): return ("\n" * 70)
@@ -301,6 +301,7 @@ def accountLogin(accountAction):
                 accountLogin("deleteAccount")
         else:
             accountLogin("readSettings")
+            if exitSystem == True: return
             accountInput = input("Delete Account:\n\nAre you sure you would like to permanently delete " + currentAccountUsername + "'s account from all your games? (yes/no) ").replace(" ", "")
             if accountInput.lower() in ["y", "yes"]: accountLogin("deleteAccountForever")
             elif accountInput.lower() in ["cancel", "quit", "exit", "back", "return"] and accountReady == True: settingsMenu("", False)
