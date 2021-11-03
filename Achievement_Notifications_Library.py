@@ -1,6 +1,6 @@
-## Achievement Notifications Library v1.5.0 - Oszust Industries
-dateInformation = "Created on: 5-15-21 - Last update: 10-29-21"
-libraryVersion = "v1.5.0"
+## Achievement Notifications Library v1.5.1 - Oszust Industries
+dateInformation = "Created on: 5-15-21 - Last update: 11-02-21"
+libraryVersion = "v1.5.1"
 newestAchievementVersion = libraryVersion
 def clear(): return ("\n" * 70)
 from datetime import date, datetime, timedelta
@@ -31,7 +31,7 @@ def librarySetup():
 ## Start Functions
     libraryConfig()
     if autoUpdate == True and deactivateFileOpening == False and os.name == "nt" and appBuild != "Dev":
-        if AutoUpdater.update(appBuild) == True: print(clear() + "(Restart app to install update.)\n\nAchievement Notifications Library " + libraryVersion + " - Oszust Industries\n" + dateInformation + "\nLibrary Version: " + libraryVersion + "\n\n\nOszust Industries Login System:\n\n")
+        if AutoUpdater.update(appBuild, libraryVersion) == True: print(clear() + "(Restart app to install update.)\n\nAchievement Notifications Library " + libraryVersion + " - Oszust Industries\n" + dateInformation + "\nLibrary Version: " + libraryVersion + "\n\n\nOszust Industries Login System:\n\n")
         else: print(clear() + "Achievement Notifications Library " + libraryVersion + " - Oszust Industries\n" + dateInformation + "\nLibrary Version: " + libraryVersion + "\n\n\nOszust Industries Login System:\n\n")
     else: print(clear() + "Achievement Notifications Library " + libraryVersion + " - Oszust Industries\n" + dateInformation + "\nLibrary Version: " + libraryVersion + "\n\n\nOszust Industries Login System:\n\n")
     accountLogin("setup")
