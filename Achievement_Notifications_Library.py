@@ -1,5 +1,5 @@
 ## Achievement Notifications Library v1.5.1 - Oszust Industries
-dateInformation = "Created on: 5-15-21 - Last update: 11-02-21"
+dateInformation = "Created on: 5-15-21 - Last update: 11-03-21"
 libraryVersion = "v1.5.1"
 newestAchievementVersion = libraryVersion
 def clear(): return ("\n" * 70)
@@ -14,7 +14,7 @@ def libraryConfig():
     global appBuild, autoUpdate, deactivateFileOpening, enableAccountSystem, enableAchievementThreading, exitSystem, overrideResetAchivements, resetSettings, systemName
     systemName, exitSystem = "Achievement Notifications Library", False
 ## Change Configures
-    appBuild = "Beta"                 ## The build the app is running (Beta, Main)
+    appBuild = "Dev"                 ## The build the app is running (Beta, Main)
     resetSettings = False             ## Reset account's settings on login
     overrideResetAchivements = False  ## Reset account's achievements on login
     enableAchievementThreading = True ## Enables achievements to be ran in separate thread
