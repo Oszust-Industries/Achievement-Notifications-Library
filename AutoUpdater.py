@@ -45,4 +45,5 @@ def update(appBuild, appVersion):
                 shutil.rmtree(appdata + "\\temp")
                 pickle.dump(datetime.utcnow(), open(current + "\\lastUpdateDate.p", "wb"))
                 return True
+            else: pickle.dump(datetime.utcnow(), open(current + "\\lastUpdateDate.p", "wb"))
     except Exception as Argument: print("Update Failed. (" + str(Argument) + ")")
