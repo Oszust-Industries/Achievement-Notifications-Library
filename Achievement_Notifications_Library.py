@@ -1,6 +1,6 @@
 ## Achievement Notifications Library v1.5.1 - Oszust Industries
 dateInformation = "Created on: 5-15-21 - Last update: 11-03-21"
-libraryVersion = "v1.5.1"
+libraryVersion = "v1.5.1.001"
 newestAchievementVersion = libraryVersion
 def clear(): return ("\n" * 70)
 from datetime import date, datetime, timedelta
@@ -14,7 +14,7 @@ def libraryConfig():
     global appBuild, autoUpdate, deactivateFileOpening, enableAccountSystem, enableAchievementThreading, exitSystem, overrideResetAchivements, resetSettings, systemName
     systemName, exitSystem = "Achievement Notifications Library", False
 ## Change Configures
-    appBuild = "Dev"                 ## The build the app is running (Beta, Main)
+    appBuild = "Beta"                 ## The build the app is running (Beta, Main)
     resetSettings = False             ## Reset account's settings on login
     overrideResetAchivements = False  ## Reset account's achievements on login
     enableAchievementThreading = True ## Enables achievements to be ran in separate thread
@@ -31,9 +31,9 @@ def librarySetup():
 ## Start Functions
     libraryConfig()
     if autoUpdate == True and deactivateFileOpening == False and os.name == "nt" and appBuild != "Dev":
-        if AutoUpdater.update(appBuild, libraryVersion) == True: print(clear() + "(Restart app to install update.)\n\nAchievement Notifications Library " + libraryVersion + " - Oszust Industries\n" + dateInformation + "\nLibrary Version: " + libraryVersion + "\n\n\nOszust Industries Login System:\n\n")
-        else: print(clear() + "Achievement Notifications Library " + libraryVersion + " - Oszust Industries\n" + dateInformation + "\nLibrary Version: " + libraryVersion + "\n\n\nOszust Industries Login System:\n\n")
-    else: print(clear() + "Achievement Notifications Library " + libraryVersion + " - Oszust Industries\n" + dateInformation + "\nLibrary Version: " + libraryVersion + "\n\n\nOszust Industries Login System:\n\n")
+        if AutoUpdater.update(appBuild, libraryVersion) == True: print(clear() + "(Restart app to install update.)\n\nAchievement Notifications Library " + libraryVersion[:-4] + " - Oszust Industries\n" + dateInformation + "\nLibrary Version: " + libraryVersion[:-4] + "\n\n\nOszust Industries Login System:\n\n")
+        else: print(clear() + "Achievement Notifications Library " + libraryVersion[:-4] + " - Oszust Industries\n" + dateInformation + "\nLibrary Version: " + libraryVersion[:-4] + "\n\n\nOszust Industries Login System:\n\n")
+    else: print(clear() + "Achievement Notifications Library " + libraryVersion[:-4] + " - Oszust Industries\n" + dateInformation + "\nLibrary Version: " + libraryVersion[:-4] + "\n\n\nOszust Industries Login System:\n\n")
     accountLogin("setup")
     accountReady = True
     if exitSystem == False:
