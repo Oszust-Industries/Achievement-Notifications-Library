@@ -12,13 +12,13 @@ import zipfile
 
 def update(appBuild, appVersion):
     try:
+        current, appdata = str(Path(__file__).resolve().parent), os.getenv('APPDATA') + "\\Oszust Industries"
         try: lastUpdateDate = pickle.load(open(str(Path(__file__).resolve().parent) + "\\lastUpdateDate.p", "rb"))
         except: lastUpdateDate = datetime(2018, 1, 1, 1, 1, 1, 0)
         if (datetime.utcnow() - lastUpdateDate).days != 0:
             for line in urllib.request.urlopen("https://raw.githubusercontent.com/Oszust-Industries/Achievement-Notifications-Library/main/Version.txt"):
                 newestVersion = "".join([s for s in line.decode("utf-8") if s.strip("\r\n")])
             if newestVersion != appVersion:
-                current, appdata = str(Path(__file__).resolve().parent), os.getenv('APPDATA') + "\\Oszust Industries"
                 print("Updating...")
                 ## Download Update
                 if path.exists(appdata) == False: os.mkdir(appdata)
