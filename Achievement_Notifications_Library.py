@@ -743,8 +743,6 @@ def testAchievements():
     testAchievements()
 
 
-  ## Start System
-
-
+## Start System
 try: librarySetup()
 except Exception as Argument: crashMessage()
