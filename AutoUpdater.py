@@ -1,4 +1,4 @@
-## Achievement Notifications Library v1.5.1 - Oszust Industries
+## Achievement Notifications Library v1.5.2 - Oszust Industries
 ## Achievement Notifications Library - AutoUpdater
 from datetime import datetime
 from os import path
