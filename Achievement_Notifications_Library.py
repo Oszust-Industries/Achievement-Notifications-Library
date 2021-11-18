@@ -1,6 +1,6 @@
-## Achievement Notifications Library v1.5.1 - Oszust Industries
-dateInformation = "Created on: 5-15-21 - Last update: 11-03-21"
-libraryVersion = "v1.5.1.001"
+## Achievement Notifications Library v1.5.2 - Oszust Industries
+dateInformation = "Created on: 5-15-21 - Last update: 11-17-21"
+libraryVersion = "v1.5.2.001"
 newestAchievementVersion = libraryVersion
 def clear(): return ("\n" * 70)
 from datetime import date, datetime, timedelta
@@ -10,11 +10,11 @@ import pickle
 import time
 
 def libraryConfig():
-## System Configures
+  ## System Configures
     global appBuild, autoUpdate, deactivateFileOpening, enableAccountSystem, enableAchievementThreading, exitSystem, overrideResetAchivements, resetSettings, systemName
     systemName, exitSystem = "Achievement Notifications Library", False
-## Change Configures
-    appBuild = "Beta"                 ## The build the app is running (Beta, Main)
+  ## Change Configures
+    appBuild = "Dev"                 ## The build the app is running (Beta, Main)
     resetSettings = False             ## Reset account's settings on login
     overrideResetAchivements = False  ## Reset account's achievements on login
     enableAchievementThreading = True ## Enables achievements to be ran in separate thread
@@ -24,11 +24,11 @@ def libraryConfig():
     pass
 
 def librarySetup():
-## Setup Software
+  ## Setup Software
     global accountReady, restartNeed
     print("Loading...")
     accountReady = False
-## Start Functions
+  ## Start Functions
     libraryConfig()
     if autoUpdate == True and deactivateFileOpening == False and os.name == "nt" and appBuild != "Dev":
         if AutoUpdater.update(appBuild, libraryVersion) == True: print(clear() + "(Restart app to install update.)\n\nAchievement Notifications Library " + libraryVersion[:-4] + " - Oszust Industries\n" + dateInformation + "\nLibrary Version: " + libraryVersion[:-4] + "\n\n\nOszust Industries Login System:\n\n")
@@ -42,7 +42,7 @@ def librarySetup():
         testAchievements()
 
 def crashMessage():
-## Display Crash
+  ## Display Crash
     global Argument
     import webbrowser
     webbrowser.open("https://github.com/Oszust-Industries/" + systemName.replace(" ", "-"),  new = 2, autoraise = True)
@@ -54,16 +54,16 @@ def crashMessage():
     else: exit()
 
 def accountLogin(accountAction):
-## Save User Settings
+  ## Save User Settings
     from random import randrange
     import math
     import shutil
     global account2Way, accountActiveOwnedDLC, accountEmail, accountInput, accountLanguage, accountOwnedDLC, accountPassword, availableAccounts, availablePossibleAnswers, currentAccountInfoPath, currentAccountPath, currentAccountUsername, deactivateFileOpening, emailCode, emailExpireTime, emailconfirmed, enableAccountSystem, exitSystem, expiredCodes, gameHintsActivated, lockDateTime, packedAccountGames, packedAccountInformation, packedSettings, passwordAttemptsLeft, punishmentMode, resetAchievements, smartWordDetector, startedCreateAccount, tempAvailableAccounts, win10ToastActive
     weakPasswords, badUsernames = ["1234", "password", "forgot password", "forgotpassword", "default", "incorrect", "back", "quit", "return", "logout"], ["disneyhockey40", "guest", "password", "forgot password", "forgotpassword", "default", "incorrect", "logout", ""]
-## Account Setup
+  ## Account Setup
     if accountAction == "setup":
         lockDateTime, expiredCodes, emailconfirmed, passwordAttemptsLeft, currentAccountUsername = "", [], False, 5, ""
-        if os.name != "nt": deactivateFileOpening = True ## Windows Detector
+        if os.name != "nt": deactivateFileOpening = True   ## Windows Detector
         accountLogin("createUserPath")
         if deactivateFileOpening == False:
             try:
@@ -123,7 +123,7 @@ def accountLogin(accountAction):
             print(clear() + "You typed an unavailable account number.\n\n\n")
             accountLogin("setup")
         return
-## Account Logout
+  ## Account Logout
     elif accountAction == "logout":
         if exitSystem == False:
             exitSystem = True
@@ -135,13 +135,13 @@ def accountLogin(accountAction):
                 time.sleep(0.3)
                 accountLogin("logout")
         return
-## Account Quit
+  ## Account Quit
     elif accountAction == "quit":
         print("\n\n\nDo not close application.\nSaving and exiting...\n")
         exitSystem = True
         if accountReady == True: Achievements("saving")
         return
-## Email
+  ## Email
     elif "emailAccount" in accountAction:
         if deactivateFileOpening == False:
             print("Loading verification system...")
@@ -160,7 +160,7 @@ def accountLogin(accountAction):
             smtp_server.close()
             print("\nBe sure to check your junk mail for the email.\n")
         return
-## Create Account
+  ## Create Account
     elif "createAccount" in accountAction:
         createAccountStep = int(accountAction.replace("createAccount_", ""))
         if createAccountStep == 1:
@@ -250,7 +250,7 @@ def accountLogin(accountAction):
                 print("\nPlease type yes or no.")
                 accountLogin("createAccount_7")
         return
-## Create Account Path
+  ## Create Account Path
     elif accountAction == "createUserPath":
         if deactivateFileOpening == False:
             if currentAccountUsername != "": print("\n\nCreating Account...")
@@ -278,7 +278,7 @@ def accountLogin(accountAction):
                 print(clear())
         if currentAccountUsername != "": accountLogin("readSettings")
         return
-## Delete Account
+  ## Delete Account
     elif accountAction == "deleteAccount":
         if currentAccountUsername == "":
             print("Delete Account:\n")
@@ -310,7 +310,7 @@ def accountLogin(accountAction):
             elif accountInput.lower() in ["n", "no"] and accountReady == False: librarySetup()
             else: accountLogin("deleteAccount")
         return
-## Delete Account Forever
+  ## Delete Account Forever
     elif accountAction == "deleteAccountForever":
         if deactivateFileOpening == False:
             print("Deleting Account...")
@@ -327,7 +327,7 @@ def accountLogin(accountAction):
             currentAccountUsername = ""
             accountLogin("setup")
         return
-## Rename Account
+  ## Rename Account
     elif accountAction == "renameAccount":
         newAccountUsername = input(str("\nRename Account:\n\nWhat would you like to rename " + currentAccountUsername + "'s account to? "))
         if newAccountUsername.lower() in ["cancel", "quit", "exit", "back", "return"] and accountReady == True:
@@ -353,7 +353,7 @@ def accountLogin(accountAction):
             print("\nThis username is unavailable.\n\n\n")
             accountLogin("renameAccount")
         return
-## Change Password
+  ## Change Password
     elif accountAction == "changeAccountPassword":
         if emailconfirmed == False: print(clear() + "Change Account Password:")
         if accountPassword == "none":
@@ -419,7 +419,7 @@ def accountLogin(accountAction):
                 print(clear() + "Incorrect verification code.\n\n\n")
                 accountLogin("setup")
         return
-## Corrupt Account
+  ## Corrupt Account
     elif accountAction == "corruptAccount":
         accountInput = input(str(clear() + "Corrupt Account:\n\n\n" + currentAccountUsername + "'s account is unreadable.\n\nWould you like to delete " + currentAccountUsername + "'s account? (yes/no) ")).lower().replace(" ", "")
         if accountInput in ["y", "yes"]: accountLogin("deleteAccountForever")
@@ -428,7 +428,7 @@ def accountLogin(accountAction):
             print(clear())
             accountLogin("corruptAccount")
         return
-## Find Account Games
+  ## Find Account Games
     elif accountAction == "accountGames":
         if os.path.isdir(currentAccountInfoPath) == False and deactivateFileOpening == False: accountLogin("corruptAccount")
         elif deactivateFileOpening == False:
@@ -442,7 +442,7 @@ def accountLogin(accountAction):
                 packedAccountGames.append(systemName)
             pickle.dump(packedAccountGames, open(currentAccountInfoPath + "\\accountGames.p", "wb"))
         return
-## Read Game Settings
+  ## Read Game Settings
     elif accountAction == "readSettings":
         if currentAccountUsername != "Default": print("\n\nLoading Account...")
         if deactivateFileOpening == False:
@@ -523,11 +523,11 @@ def accountLogin(accountAction):
         accountLogin("saveSettings")
         accountLogin("readOwnedDLC")
         return
-## Save Settings
+  ## Save Settings
     elif accountAction == "saveSettings":
         if deactivateFileOpening == False: pickle.dump([win10ToastActive, resetAchievements], open(currentAccountPath + "\\settingsSave.p", "wb"))
         return
-## Read Owned DLC
+  ## Read Owned DLC
     elif accountAction == "readOwnedDLC":
         freeGameDLC, accountActiveOwnedDLC = [], []
         if deactivateFileOpening == False:
@@ -550,7 +550,7 @@ def accountLogin(accountAction):
         return
 
 def waitingAchievements():
-## Threading - Waiting Achievements
+  ## Threading - Waiting Achievements
     global waitingAchievementsList
     while True:
         if len(waitingAchievementsList) > 0 and toaster.notification_active() == False:
@@ -560,16 +560,16 @@ def waitingAchievements():
         else: time.sleep(0.3)
 
 def Achievements(achievementToGain):
-## Achievement System
+  ## Achievement System
     from pathlib import Path
     from shutil import copy
     global achievementIconLocation, achievementProgressTracker, achievementVersion, availableAchievements, currentPlaytime, earnedBronze, earnedGold, earnedPlatinum, earnedSilver, gained_Achievements, lastPlaytimeDatePlayed, playtimeStartTime, resetAchievements, toaster, waitingAchievementsList, win10ToastActive
     availableAchievements = 5
-    defaultAchievementProgressTracker = [0, 10, 0, 5]
-## Last Play Date
+    defaultAchievementProgressTracker = [0, 10, 0, 5, 0, 5]
+  ## Last Play Date
     if exitSystem == True: lastPlaytimeDatePlayed = date.today().strftime("%m/%d/%y")
     else: lastPlaytimeDatePlayed = "Currently In-game"
-## Reset Achievements
+  ## Reset Achievements
     if achievementToGain == "reset":
         if resetSettings == True: print("Loading 1/2: (Resetting settings)...\nLoading 2/2: (Resetting achievements - " + newestAchievementVersion + ")...\n\n\n")
         else: print("Loading 1/1: (Resetting achievements - " + newestAchievementVersion + ")...\n\n\n")
@@ -582,7 +582,7 @@ def Achievements(achievementToGain):
             pickle.dump(gained_Achievements, open(currentAccountPath + "\\achievementSave.p", "wb"))
         accountLogin("saveSettings")
         return
-## Setup System
+  ## Setup System
     elif achievementToGain == "setup":
         if systemName != "Achievement Notifications Library" and deactivateFileOpening == False: copy(str(Path(__file__).resolve().parent) + "\\Achievements.json", currentAccountPath)
         if enableAchievementThreading == True:
@@ -597,9 +597,9 @@ def Achievements(achievementToGain):
                 else: currentPlaytime = "0"
             except OSError: resetAchievements, currentPlaytime = True, "0"
         else: currentPlaytime = "0"
-## Remove User Achievements
+  ## Remove User Achievements
         if deactivateFileOpening == True or (overrideResetAchivements == True or resetAchievements == True): Achievements("reset")
-## Load Achievement System
+  ## Load Achievement System
         if deactivateFileOpening == False:
             try:
                 from win10toast import ToastNotifier
@@ -622,12 +622,12 @@ def Achievements(achievementToGain):
             except OSError: Achievements("reset")
         else: win10ToastActive = False
         print(clear())
-## Load Achievement Progress System
+  ## Load Achievement Progress System
         if deactivateFileOpening == False:
             try: achievementProgressTracker = pickle.load(open(currentAccountPath + "\\achievementProgressTracker.p", "rb"))
             except OSError: achievementProgressTracker = defaultAchievementProgressTracker
         else: achievementProgressTracker = defaultAchievementProgressTracker
-## Compatibility Versions
+  ## Compatibility Versions
         if deactivateFileOpening == False:
             pickle.dump(achievementProgressTracker, open(currentAccountPath + "\\achievementProgressTracker.p", "wb"))
             if len(gained_Achievements) > 0:
@@ -641,7 +641,7 @@ def Achievements(achievementToGain):
             print("Current Achievements: " + str(gained_Achievements) + "\nCurrent Version: " + achievementVersion)
         Achievements("saving")
         return
-## System Achievements
+  ## System Achievements
     if win10ToastActive == True and enableAchievementThreading == True and toaster.notification_active():
         waitingAchievementsList.append(achievementToGain)
         return
@@ -664,7 +664,7 @@ def Achievements(achievementToGain):
         elif achievementToGain == "Achievement_All_Animals":
             if win10ToastActive == True: toaster.show_toast("Gold - Zoologist", "Complete all the game topics in the animals category." + "\n(" + currentAccountUsername + ")", icon_path = achievementIconLocation + "\Achievement Icons\Gold-trophy.ico", duration = 5, threaded = enableAchievementThreading)
             if achievementVersion not in ["v1.0.0"]: medalEarned = "Gold"
-        elif achievementToGain != "saving": print("GAME ERROR(No Achievement with that name found)")
+        elif achievementToGain != "saving": print("GAME ERROR(No Achievement with that name found)" + achievementToGain)
         if achievementVersion not in ["v1.0.0"] and achievementToGain != "saving":
             if medalEarned == "Bronze": earnedBronze += 1
             elif medalEarned == "Silver": earnedSilver += 1
@@ -677,28 +677,33 @@ def Achievements(achievementToGain):
         if achievementToGain != "saving": gained_Achievements.append(achievementToGain)
         if achievementVersion not in ["v1.0.0", "v1.1.0"] and achievementToGain != "saving": gained_Achievements.append(str(date.today().strftime("%m/%d/%y") + " " + datetime.now().strftime("%I:%M %p")))
         if deactivateFileOpening == False: pickle.dump(gained_Achievements, open(currentAccountPath + "\\achievementSave.p", "wb"))
-## System Achievements Progress
+  ## System Achievements Progress
     elif  achievementToGain not in ["reset", "setup", "ready"] and "Progress" in achievementToGain:
         achievementToGain = achievementToGain.replace("Achievement_Progress_", "")
-        if len(achievementProgressTracker) >= 1: animalsCategory = int(achievementProgressTracker[0])
-        else: animalsCategory = int(defaultAchievementProgressTracker[0])
-        if len(achievementProgressTracker) >= 2: maxAnimalsCategory = int(achievementProgressTracker[1])
-        else: maxAnimalsCategory = int(defaultAchievementProgressTracker[1])
-        if len(achievementProgressTracker) >= 3: winningStreak = int(achievementProgressTracker[2])
-        else: winningStreak = int(defaultAchievementProgressTracker[2])
-        if len(achievementProgressTracker) >= 4: maxWinningStreak = int(achievementProgressTracker[3])
-        else: maxWinningStreak = int(defaultAchievementProgressTracker[3])
-        if achievementToGain == "Animals": animalsCategory += 1
-        if "Achievement_All_Animals" not in gained_Achievements and (animalsCategory >= maxAnimalsCategory): Achievements("Achievement_All_Animals")
-## Streak Counter
-        if "Achievement_Hot_Streak" not in gained_Achievements and (winningStreak >= maxWinningStreak): Achievements("Achievement_Hot_Streak")
-## Save Progress
-        achievementProgressTracker = [animalsCategory, maxAnimalsCategory, winningStreak, maxWinningStreak]
+        achievementProgressList = ["animalsCategory", "maxAnimalsCategory", "losingStreak", "maxLosingStreak", "winningStreak", "maxWinningStreak"]
+        global LanimalsCategory, LmaxAnimalsCategory, LlosingStreak, LmaxLosingStreak, LwinningStreak, LmaxWinningStreak
+        for i in achievementProgressList:
+            if len(achievementProgressTracker) > achievementProgressList.index(i): globals()["L" + str(i)] = achievementProgressTracker[achievementProgressList.index(i)]
+            else: globals()["L" + str(i)] = int(defaultAchievementProgressTracker[achievementProgressList.index(i)])
+        for i in achievementProgressList:
+  ## Achievements Progress and Achievement Rewarder
+            if "category" in i.lower():
+                if "max" not in i and achievementToGain == (i).capitalize().replace("category", ""):
+                    globals()["L" + str(i)] += 1
+                    if "Achievement_All_" + (i).capitalize().replace("category", "") not in gained_Achievements and globals()["L" + str(i)] >= globals()["Lmax" + str(i).capitalize().replace("category", "Category")]: Achievements(("Achievement_All_" + (i).capitalize().replace("category", "")))
+            elif "streak" in i.lower() and achievementToGain == (i):
+                globals()["L" + str(i)] += 1
+                if "max" not in i and (i).capitalize() == "losingStreak": LwinningStreak = 0
+                elif "max" not in i and (i).capitalize() == "winningStreak": LlosingStreak = 0
+                if "Achievement_Hot_Streak" not in gained_Achievements and (LwinningStreak >= LmaxWinningStreak): Achievements("Achievement_Hot_Streak")
+                elif "Achievement_Cold_Streak" not in gained_Achievements and (LlosingStreak >= LmaxLosingStreak): Achievements("Achievement_Cold_Streak")
+  ## Save Progress
+        achievementProgressTracker = [LanimalsCategory, LmaxAnimalsCategory, LlosingStreak, LmaxLosingStreak, LwinningStreak, LmaxWinningStreak]
         if deactivateFileOpening == False: pickle.dump(achievementProgressTracker, open(currentAccountPath + "\\achievementProgressTracker.p", "wb"))
 
 ## Library Testing:
 def testAchievements():
-## Test Achievements
+  ## Test Achievements
     global exitSystem
     if resetSettings == True and (overrideResetAchivements == False and resetAchievements == False): print("\nLoading 1/1: (Resetting settings)...")
     userAnswer = input("\nINPUT: ").lower().replace(" ", "")
@@ -712,9 +717,10 @@ def testAchievements():
     elif userAnswer == "welcome3":
         print("Rewarding achievement = Achievement_Welcome3")
         Achievements("Achievement_Welcome3")
-    elif userAnswer == "hotstreak":
-        print("Rewarding achievement = Achievement_Hot_Streak")
-        Achievements("Achievement_Hot_Streak")
+    elif userAnswer == "winstreak":
+        currentCategory = "winningStreak"
+        print("Rewarding one more = " + currentCategory)
+        Achievements("Achievement_Progress_" + currentCategory)
     elif userAnswer == "animal":
         currentCategory = "Animals"
         print("Rewarding one more = " + currentCategory)
@@ -737,6 +743,8 @@ def testAchievements():
     testAchievements()
 
 
-## Start System
+  ## Start System
+
+
 try: librarySetup()
 except Exception as Argument: crashMessage()
