@@ -16,8 +16,12 @@ def update(appBuild, appVersion):
         try: lastUpdateDate = pickle.load(open(str(Path(__file__).resolve().parent) + "\\lastUpdateDate.p", "rb"))
         except: lastUpdateDate = datetime(2018, 1, 1, 1, 1, 1, 0)
         if (datetime.utcnow() - lastUpdateDate).days != 0:
-            for line in urllib.request.urlopen("https://raw.githubusercontent.com/Oszust-Industries/Achievement-Notifications-Library/main/Version.txt"):
-                newestVersion = "".join([s for s in line.decode("utf-8") if s.strip("\r\n")])
+            if appBuild.lower() == "main":
+                for line in urllib.request.urlopen("https://raw.githubusercontent.com/Oszust-Industries/Achievement-Notifications-Library/main/Version.txt"):
+                    newestVersion = "".join([s for s in line.decode("utf-8") if s.strip("\r\n")])
+            elif appBuild.lower() == "beta":
+                for line in urllib.request.urlopen("https://raw.githubusercontent.com/Oszust-Industries/Achievement-Notifications-Library/Beta/Version.txt"):
+                    newestVersion = "".join([s for s in line.decode("utf-8") if s.strip("\r\n")])
             if newestVersion != appVersion:
                 print("Updating...")
                 ## Download Update
