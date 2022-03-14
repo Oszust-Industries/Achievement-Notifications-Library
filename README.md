@@ -32,4 +32,4 @@ This software uses [Windows 10 Toast](https://pypi.org/project/win10toast/) pack
 
 ## Library Infomation:
 
-A library is a code used in other Oszust Industries projects. Anyone can use the code, but it's more valuable to developers.
+A library is code used in other Oszust Industries projects. Anyone can use the code, but it's more valuable to developers.
