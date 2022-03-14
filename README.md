@@ -1,28 +1,39 @@
-# Achievement Notifications Library (BETA)
+# Achievement Notifications Library (BETA) | [Oszust Industries](https://github.com/Oszust-Industries)
 
-Achievement Notifications Library has an account system and an Achievement system. The account system stores users' save games and achievements saves in unique locations. The account system allows users to create an account that will be used in all of Oszust Industries's games. The achievement system will display the notification and track your achievement progress.
+Achievement Notifications Library consists of an account system and an Achievement system. The account system stores users' save games and achievement saves. The account system also allows users to create an account used in all of Oszust Industries' programs. The achievement system will display the notification and track your achievement progress.
 
 Release Date: May 15, 2021
+
+Category: Library
 
 Developer: [Oszust Industries](https://github.com/Oszust-Industries)
 <br /> [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/bukotsunikki.svg?style=social&label=Follow%20%40OszustOS)](https://twitter.com/OszustOS)
 
-<br /> Developer Library
+## Beta Warning:
 
-Languages: English
+This release is a beta version. Beta releases are still tested and considered safe before being released. Unknown bugs may arise and need reporting. If you find any bugs, please report them to the issue section. Thank you for your help in development.
 
-<br /> This library reads and writes game saves on your computer.
+## Requirements:
 
-This library uses AutoUpdater.
-<br /> (*Updates are auto-checked and installed when available*)
+* Storage - 900 KB
+* Windows Device
 
-This library uses [Windows 10 Toast](https://pypi.org/project/win10toast/) package to display notifications on your system.
-<br /> (*Windows 10 Toast must be installed for achievement notifications*)
+## Additional Information:
+
+### Supported Languages:
+* English
+
+### Permissions: 
+* Read/write saves on your computer.
+* Send notifications
+
+<br /> This software uses AutoUpdater 1.0 (*Updates are auto-checked and installed when available*)
+
+##
+
+This software uses [Windows 10 Toast](https://pypi.org/project/win10toast/) package to display notifications on your system.
+
 
 ## Library Infomation:
 
-A library is a program that is used in other Oszust Industries games and softwares. A library can be used by the average user but is more valuable to developers.
-
-## Beta Warning:
-
-This release is a beta version. Beta releases are still tested and considered safe before being released. Unknown bugs may arise and need to be reported. If you find any bugs, please report them to the issue section. Thank you for your help in development.
+A library is code used in other Oszust Industries projects. Anyone can use the code, but it's more valuable to developers.
